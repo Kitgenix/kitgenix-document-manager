@@ -1,0 +1,193 @@
+/* Kitgenix Document Manager — Public UI */
+
+.kgx-dm-cards {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 14px;
+	align-items: stretch;
+}
+
+.kgx-dm-cards .kgx-dm-card {
+	max-width: none;
+}
+
+@media (max-width: 768px) {
+	.kgx-dm-cards {
+		grid-template-columns: 1fr;
+	}
+}
+
+.kgx-dm-card {
+	display: inline-flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 12px;
+	border: 1px solid var(--kitgenix-border-color, rgba(0, 0, 0, 0.12));
+	background: var(--kitgenix-surface, transparent);
+	border-radius: 10px;
+	max-width: 280px;
+}
+
+.kgx-dm-card__preview {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-decoration: none;
+}
+
+.kgx-dm-card__img {
+	width: var(--kgx-dm-thumb-size, 96px);
+	height: var(--kgx-dm-thumb-size, 96px);
+	object-fit: cover;
+	border-radius: 8px;
+	border: 1px solid var(--kitgenix-border-color, rgba(0, 0, 0, 0.12));
+	background: var(--kitgenix-surface-alt, rgba(0, 0, 0, 0.04));
+}
+
+.kgx-dm-card__img--icon {
+	object-fit: contain;
+	padding: 10px;
+}
+
+.kgx-dm-card__img--placeholder {
+	display: block;
+}
+
+.kgx-dm-card__title {
+	font-weight: 700;
+	line-height: 1.2;
+	text-align: center;
+	min-height: calc(1.2em * 2);
+	max-height: calc(1.2em * 2);
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+
+.kgx-dm-card__desc {
+	font-size: 0.92em;
+	color: var(--kitgenix-text-muted, rgba(0, 0, 0, 0.7));
+	text-align: center;
+	min-height: calc(1.3em * 2);
+	max-height: calc(1.3em * 2);
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+
+.kgx-dm-card__meta-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 6px;
+}
+
+.kgx-dm-card__meta {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	column-gap: 10px;
+	font-size: 0.92em;
+}
+
+.kgx-dm-card__meta-label {
+	color: var(--kitgenix-text-muted, rgba(0, 0, 0, 0.6));
+	text-align: var(--kgx-dm-meta-label-align, left);
+}
+
+.kgx-dm-card__meta-value {
+	font-weight: 600;
+	text-align: var(--kgx-dm-meta-value-align, right);
+}
+
+.kgx-dm-card--meta-justify {
+	--kgx-dm-meta-label-align: left;
+	--kgx-dm-meta-value-align: right;
+}
+
+.kgx-dm-card--meta-left {
+	--kgx-dm-meta-label-align: left;
+	--kgx-dm-meta-value-align: left;
+}
+
+.kgx-dm-card--meta-center {
+	--kgx-dm-meta-label-align: center;
+	--kgx-dm-meta-value-align: center;
+}
+
+.kgx-dm-card--meta-right {
+	--kgx-dm-meta-label-align: right;
+	--kgx-dm-meta-value-align: right;
+}
+
+.kgx-dm-card__actions {
+	display: flex;
+	justify-content: center;
+}
+
+.kgx-dm-card--button-left .kgx-dm-card__actions {
+	justify-content: flex-start;
+}
+
+.kgx-dm-card--button-center .kgx-dm-card__actions {
+	justify-content: center;
+}
+
+.kgx-dm-card--button-right .kgx-dm-card__actions {
+	justify-content: flex-end;
+}
+
+.kgx-dm-card--button-justify .kgx-dm-card__actions {
+	justify-content: flex-start;
+}
+
+.kgx-dm-card--button-justify .kgx-dm-card__button {
+	width: 100%;
+	text-align: center;
+}
+
+.kgx-dm-card--button-full-width .kgx-dm-card__actions {
+	justify-content: flex-start;
+}
+
+.kgx-dm-card--button-full-width .kgx-dm-card__button,
+.kgx-dm-card--button-full-width .kgx-dm-card__button--theme {
+	width: 100%;
+}
+
+.kgx-dm-card__button {
+	display: inline-block;
+	padding: 8px 12px;
+	border: 1px solid currentColor;
+	border-radius: 8px;
+	text-decoration: none;
+	font-weight: 700;
+	line-height: 1;
+	color: var(--kgx-dm-btn-text, currentColor);
+	border-color: var(--kgx-dm-btn-border, currentColor);
+	background: var(--kgx-dm-btn-bg, transparent);
+}
+
+.kgx-dm-card__button--solid {
+	background: var(--kgx-dm-btn-bg, var(--kitgenix-brand, currentColor));
+	border-color: var(--kgx-dm-btn-border, var(--kitgenix-brand, currentColor));
+	color: var(--kgx-dm-btn-text, var(--kitgenix-surface, Canvas));
+}
+
+.kgx-dm-card__button--solid:hover,
+.kgx-dm-card__button--solid:focus {
+	text-decoration: none;
+}
+
+.kgx-dm-card__button:hover,
+.kgx-dm-card__button:focus {
+	background: var(--kgx-dm-btn-hover-bg, var(--kgx-dm-btn-bg, transparent));
+	border-color: var(--kgx-dm-btn-hover-border, var(--kgx-dm-btn-border, currentColor));
+	color: var(--kgx-dm-btn-hover-text, var(--kgx-dm-btn-text, currentColor));
+	text-decoration: underline;
+}
+
+.kgx-dm-card__button--theme:hover,
+.kgx-dm-card__button--theme:focus {
+	text-decoration: none;
+}
