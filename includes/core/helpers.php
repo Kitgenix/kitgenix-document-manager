@@ -18,13 +18,11 @@ function kitgenix_document_manager_default_settings(): array {
 
         // Frontend (document card shortcode) defaults.
         'card_button_label'        => 'View',
-        'card_button_style_source' => 'custom', // custom|theme
-        'card_button_style'        => 'outline', // outline|solid|theme
+        'card_button_style'        => 'outline', // outline|solid
         'card_open_new_tab'        => false,
         'card_show_file_type'      => true,
         'card_show_file_size'      => true,
         'card_show_description'    => false,
-        'card_button_full_width'   => false,
 
         'card_image_size'          => 96, // px
         'card_meta_alignment'      => 'justify', // justify|left|center|right
@@ -38,6 +36,14 @@ function kitgenix_document_manager_default_settings(): array {
         'card_button_hover_bg_color'    => '',
         'card_button_hover_border_color'=> '',
     ];
+}
+
+/**
+ * DB schema/data-shape version for idempotent upgrade routines. Bump this
+ * whenever an upgrade routine needs to run again for existing installs.
+ */
+function kitgenix_document_manager_db_version(): string {
+    return '2.0.0';
 }
 
 function kitgenix_document_manager_get_settings(): array {
@@ -58,15 +64,12 @@ function kitgenix_document_manager_get_settings(): array {
     $settings['delete_data_on_uninstall'] = (bool) $settings['delete_data_on_uninstall'];
 
     $settings['card_button_label']   = sanitize_text_field( (string) ( $settings['card_button_label'] ?? 'View' ) );
-    $settings['card_button_style_source'] = (string) ( $settings['card_button_style_source'] ?? 'custom' );
-    $settings['card_button_style_source'] = ( $settings['card_button_style_source'] === 'theme' ) ? 'theme' : 'custom';
     $settings['card_button_style']   = (string) ( $settings['card_button_style'] ?? 'outline' );
-    $settings['card_button_style']   = in_array( $settings['card_button_style'], [ 'outline', 'solid', 'theme' ], true ) ? $settings['card_button_style'] : 'outline';
+    $settings['card_button_style']   = ( $settings['card_button_style'] === 'solid' ) ? 'solid' : 'outline';
     $settings['card_open_new_tab']   = (bool) ( $settings['card_open_new_tab'] ?? false );
     $settings['card_show_file_type'] = (bool) ( $settings['card_show_file_type'] ?? true );
     $settings['card_show_file_size'] = (bool) ( $settings['card_show_file_size'] ?? true );
     $settings['card_show_description'] = (bool) ( $settings['card_show_description'] ?? false );
-    $settings['card_button_full_width'] = (bool) ( $settings['card_button_full_width'] ?? false );
 
     $settings['card_image_size'] = absint( $settings['card_image_size'] ?? 96 );
     if ( $settings['card_image_size'] < 32 || $settings['card_image_size'] > 256 ) {
@@ -305,6 +308,57 @@ function kitgenix_document_manager_get_document_schedule_status( int $post_id, ?
     ];
 }
 
+/**
+ * Unified lifecycle state for the Documents dashboard, combining draft
+ * status, missing files, schedule status, and access/visibility into the
+ * single set of states requested for the lifecycle dashboard: Draft,
+ * Unavailable, Scheduled, Live, Restricted, Archived, Expired.
+ *
+ * @return array{state: string, label: string}
+ */
+function kitgenix_document_manager_get_document_lifecycle_state( int $post_id ): array {
+    $post = get_post( $post_id );
+
+    if ( ! ( $post instanceof \WP_Post ) ) {
+        return [ 'state' => 'unavailable', 'label' => __( 'Unavailable', 'kitgenix-document-manager' ) ];
+    }
+
+    if ( $post->post_status !== 'publish' ) {
+        return [ 'state' => 'draft', 'label' => __( 'Draft', 'kitgenix-document-manager' ) ];
+    }
+
+    $attachment_id = (int) get_post_meta( $post_id, '_kitgenix_document_manager_current_attachment_id', true );
+    if ( $attachment_id <= 0 ) {
+        return [ 'state' => 'unavailable', 'label' => __( 'Unavailable', 'kitgenix-document-manager' ) ];
+    }
+
+    $schedule_status = kitgenix_document_manager_get_document_schedule_status( $post_id );
+    $status = (string) ( $schedule_status['status'] ?? 'active' );
+    if ( 'scheduled' === $status ) {
+        return [ 'state' => 'scheduled', 'label' => __( 'Scheduled', 'kitgenix-document-manager' ) ];
+    }
+    if ( 'archived' === $status ) {
+        return [ 'state' => 'archived', 'label' => __( 'Archived', 'kitgenix-document-manager' ) ];
+    }
+    if ( 'expired' === $status ) {
+        return [ 'state' => 'expired', 'label' => __( 'Expired', 'kitgenix-document-manager' ) ];
+    }
+
+    $visibility = kitgenix_document_manager_get_document_visibility( $post_id );
+    $has_granular_rules = ! empty( kitgenix_document_manager_get_document_allowed_roles( $post_id ) )
+        || ! empty( kitgenix_document_manager_get_document_allowed_user_ids( $post_id ) )
+        || kitgenix_document_manager_get_document_required_capability( $post_id ) !== '';
+
+    if ( 'private' === $visibility ) {
+        return [ 'state' => 'restricted', 'label' => __( 'Private', 'kitgenix-document-manager' ) ];
+    }
+    if ( 'restricted' === $visibility || $has_granular_rules ) {
+        return [ 'state' => 'restricted', 'label' => __( 'Restricted', 'kitgenix-document-manager' ) ];
+    }
+
+    return [ 'state' => 'live', 'label' => __( 'Live', 'kitgenix-document-manager' ) ];
+}
+
 function kitgenix_document_manager_get_document_share_secret( int $post_id ): string {
     return sanitize_text_field( (string) get_post_meta( $post_id, '_kitgenix_document_manager_share_secret', true ) );
 }
@@ -319,6 +373,72 @@ function kitgenix_document_manager_ensure_document_share_secret( int $post_id ):
     update_post_meta( $post_id, '_kitgenix_document_manager_share_secret', $secret );
 
     return $secret;
+}
+
+/**
+ * Optional maximum number of times a signed share link may be used.
+ * 0 (default) means unlimited.
+ */
+function kitgenix_document_manager_get_document_share_max_uses( int $post_id ): int {
+    return max( 0, absint( get_post_meta( $post_id, '_kitgenix_document_manager_share_max_uses', true ) ) );
+}
+
+function kitgenix_document_manager_get_document_share_use_count( int $post_id ): int {
+    return max( 0, absint( get_post_meta( $post_id, '_kitgenix_document_manager_share_use_count', true ) ) );
+}
+
+/**
+ * Best-effort atomic increment of the share-link use counter. Uses a direct
+ * SQL increment rather than read-then-write to reduce (not eliminate) the
+ * race window under concurrent downloads of the same signed link.
+ */
+function kitgenix_document_manager_increment_document_share_use_count( int $post_id ): int {
+    global $wpdb;
+
+    if ( $post_id <= 0 || ! isset( $wpdb ) || ! is_object( $wpdb ) ) {
+        return 0;
+    }
+
+    $meta_key = '_kitgenix_document_manager_share_use_count';
+    $existing = get_post_meta( $post_id, $meta_key, true );
+
+    if ( '' === $existing ) {
+        add_post_meta( $post_id, $meta_key, 1, true );
+    } else {
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- atomic numeric increment; no user input involved.
+        $wpdb->query(
+            $wpdb->prepare(
+                "UPDATE {$wpdb->postmeta} SET meta_value = meta_value + 1 WHERE post_id = %d AND meta_key = %s",
+                $post_id,
+                $meta_key
+            )
+        );
+        clean_post_cache( $post_id );
+    }
+
+    return kitgenix_document_manager_get_document_share_use_count( $post_id );
+}
+
+/**
+ * Revoke the currently issued signed share link (any previously shared URL
+ * stops working immediately) without disabling future sharing – an admin
+ * can set a new expiry afterwards to issue a fresh link.
+ */
+function kitgenix_document_manager_revoke_document_share_link( int $post_id ): void {
+    delete_post_meta( $post_id, '_kitgenix_document_manager_share_expires_gmt' );
+    delete_post_meta( $post_id, '_kitgenix_document_manager_share_use_count' );
+}
+
+/**
+ * Rotate the per-document signing secret. Every link issued before this
+ * call becomes invalid immediately, even ones whose expiry has not passed,
+ * because the signature is derived from the secret.
+ */
+function kitgenix_document_manager_regenerate_document_share_secret( int $post_id ): string {
+    delete_post_meta( $post_id, '_kitgenix_document_manager_share_secret' );
+    delete_post_meta( $post_id, '_kitgenix_document_manager_share_use_count' );
+
+    return kitgenix_document_manager_ensure_document_share_secret( $post_id );
 }
 
 function kitgenix_document_manager_build_document_share_signature( int $post_id, int $expires_timestamp, bool $ensure_secret = false ): string {
@@ -364,7 +484,7 @@ function kitgenix_document_manager_get_document_signed_share_url( int $post_id )
         return '';
     }
 
-    return add_query_arg(
+    $url = add_query_arg(
         [
             'kitgenix_dm_share'   => '1',
             'kitgenix_dm_expires' => (string) $expires_timestamp,
@@ -372,13 +492,34 @@ function kitgenix_document_manager_get_document_signed_share_url( int $post_id )
         ],
         kitgenix_document_manager_stable_url( $slug )
     );
+
+    /**
+     * Fires/filters whenever a signed share URL is generated for a document.
+     *
+     * @param string $url               The generated signed share URL.
+     * @param int    $post_id           Document post ID.
+     * @param int    $expires_timestamp Expiry as a Unix timestamp (GMT).
+     */
+    return (string) apply_filters( 'kitgenix_document_manager_share_link_url', $url, $post_id, $expires_timestamp );
 }
 
-function kitgenix_document_manager_request_has_valid_share_link( int $post_id ): bool {
+/**
+ * Validate the share-link parameters on the current request against a document,
+ * distinguishing *why* a link was rejected so callers can log or act on it.
+ *
+ * Codes: 'link_missing_flag' (no share params present at all – the normal case
+ * for ordinary visits), 'link_expired' (the link's own expiry has passed),
+ * 'secret_rotated' (the link predates the document's current share settings,
+ * e.g. a fresh link was issued since), 'signature_mismatch' (signature does not
+ * match – the URL was altered, corrupted, or fabricated).
+ *
+ * @return array{valid: bool, code: string} $code is '' when $valid is true.
+ */
+function kitgenix_document_manager_validate_share_link_request( int $post_id ): array {
     // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- front-end signed access links are URL based.
     $share_flag = isset( $_GET['kitgenix_dm_share'] ) ? sanitize_key( wp_unslash( (string) $_GET['kitgenix_dm_share'] ) ) : '';
     if ( $share_flag !== '1' ) {
-        return false;
+        return [ 'valid' => false, 'code' => 'link_missing_flag' ];
     }
 
     // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- front-end signed access links are URL based.
@@ -387,23 +528,37 @@ function kitgenix_document_manager_request_has_valid_share_link( int $post_id ):
     $signature = isset( $_GET['kitgenix_dm_sig'] ) ? sanitize_text_field( wp_unslash( (string) $_GET['kitgenix_dm_sig'] ) ) : '';
 
     if ( $expires_timestamp <= 0 || $signature === '' || $expires_timestamp <= time() ) {
-        return false;
+        return [ 'valid' => false, 'code' => 'link_expired' ];
     }
 
     $current_expiry = kitgenix_document_manager_get_document_share_expires_gmt( $post_id );
     $current_ts     = $current_expiry !== '' ? strtotime( $current_expiry . ' GMT' ) : false;
     if ( ! is_int( $current_ts ) && ! is_float( $current_ts ) ) {
-        return false;
+        // No share expiry currently stored for this document – most often
+        // because sharing was turned off or a new link was issued since.
+        return [ 'valid' => false, 'code' => 'secret_rotated' ];
     }
 
     $current_ts = (int) $current_ts;
     if ( $current_ts !== $expires_timestamp ) {
-        return false;
+        return [ 'valid' => false, 'code' => 'secret_rotated' ];
     }
 
     $expected_signature = kitgenix_document_manager_build_document_share_signature( $post_id, $expires_timestamp, false );
+    if ( $expected_signature === '' || ! hash_equals( $expected_signature, $signature ) ) {
+        return [ 'valid' => false, 'code' => 'signature_mismatch' ];
+    }
 
-    return $expected_signature !== '' && hash_equals( $expected_signature, $signature );
+    $max_uses = kitgenix_document_manager_get_document_share_max_uses( $post_id );
+    if ( $max_uses > 0 && kitgenix_document_manager_get_document_share_use_count( $post_id ) >= $max_uses ) {
+        return [ 'valid' => false, 'code' => 'link_use_limit_reached' ];
+    }
+
+    return [ 'valid' => true, 'code' => '' ];
+}
+
+function kitgenix_document_manager_request_has_valid_share_link( int $post_id ): bool {
+    return kitgenix_document_manager_validate_share_link_request( $post_id )['valid'];
 }
 
 function kitgenix_document_manager_evaluate_document_access( int $post_id, array $args = [] ): array {
@@ -736,11 +891,19 @@ function kitgenix_document_manager_ensure_upload_dir(): bool {
     if ( $dir === '' ) {
         return false;
     }
+
+    $ok = true;
     if ( ! file_exists( $dir ) ) {
-        return wp_mkdir_p( $dir );
+        $ok = wp_mkdir_p( $dir );
+    } else {
+        $ok = is_dir( $dir );
     }
 
-    return is_dir( $dir );
+    if ( $ok ) {
+        kitgenix_document_manager_protect_upload_dir();
+    }
+
+    return $ok;
 }
 
 function kitgenix_document_manager_stable_url( string $slug ): string {
@@ -795,4 +958,139 @@ function kitgenix_document_manager_set_versions( int $post_id, array $attachment
     $clean = array_values( array_unique( $clean ) );
 
     update_post_meta( $post_id, '_kitgenix_document_manager_versions', $clean );
+}
+
+/**
+ * If the given attachment belongs to a Kitgenix Document Manager document
+ * (either the current file or a saved version – both are parented to the
+ * document post), return that document's post ID. Otherwise 0.
+ */
+function kitgenix_document_manager_attachment_document_id( int $attachment_id ): int {
+    if ( $attachment_id <= 0 ) {
+        return 0;
+    }
+
+    $attachment = get_post( $attachment_id );
+    if ( ! ( $attachment instanceof \WP_Post ) || $attachment->post_type !== 'attachment' ) {
+        return 0;
+    }
+
+    $parent_id = (int) $attachment->post_parent;
+    if ( $parent_id <= 0 ) {
+        return 0;
+    }
+
+    $parent = get_post( $parent_id );
+    if ( ! ( $parent instanceof \WP_Post ) || $parent->post_type !== CPT::POST_TYPE ) {
+        return 0;
+    }
+
+    return $parent_id;
+}
+
+/**
+ * Optional per-version label/note, stored separately from the plain
+ * attachment-ID version list so existing `_kitgenix_document_manager_versions`
+ * data never needs to be migrated or re-shaped.
+ *
+ * @return array{label: string, note: string}
+ */
+function kitgenix_document_manager_get_version_meta( int $document_id, int $attachment_id ): array {
+    $all = get_post_meta( $document_id, '_kitgenix_document_manager_version_meta', true );
+    $all = is_array( $all ) ? $all : [];
+
+    $entry = isset( $all[ $attachment_id ] ) && is_array( $all[ $attachment_id ] ) ? $all[ $attachment_id ] : [];
+
+    return [
+        'label' => isset( $entry['label'] ) ? sanitize_text_field( (string) $entry['label'] ) : '',
+        'note'  => isset( $entry['note'] ) ? sanitize_textarea_field( (string) $entry['note'] ) : '',
+    ];
+}
+
+function kitgenix_document_manager_set_version_meta( int $document_id, int $attachment_id, string $label, string $note ): void {
+    if ( $document_id <= 0 || $attachment_id <= 0 ) {
+        return;
+    }
+
+    $all = get_post_meta( $document_id, '_kitgenix_document_manager_version_meta', true );
+    $all = is_array( $all ) ? $all : [];
+
+    $label = sanitize_text_field( $label );
+    $note  = sanitize_textarea_field( $note );
+
+    if ( $label === '' && $note === '' ) {
+        unset( $all[ $attachment_id ] );
+    } else {
+        $all[ $attachment_id ] = [ 'label' => $label, 'note' => $note ];
+    }
+
+    update_post_meta( $document_id, '_kitgenix_document_manager_version_meta', $all );
+}
+
+/**
+ * Display name of the user who uploaded/replaced a given version, derived
+ * from the attachment's own post_author (set automatically by WordPress
+ * when the file was uploaded) – no separate tracking needed.
+ */
+function kitgenix_document_manager_get_version_uploaded_by( int $attachment_id ): string {
+    $attachment = get_post( $attachment_id );
+    if ( ! ( $attachment instanceof \WP_Post ) ) {
+        return '';
+    }
+
+    $author_id = (int) $attachment->post_author;
+    if ( $author_id <= 0 ) {
+        return '';
+    }
+
+    $user = get_userdata( $author_id );
+    if ( ! $user ) {
+        return '';
+    }
+
+    return (string) $user->display_name;
+}
+
+/**
+ * Idempotently write server-level access-blocking files (.htaccess for
+ * Apache, web.config for IIS, an empty index.php as a directory-listing
+ * fallback) into the plugin's dedicated upload subdirectory. Documents are
+ * still served correctly because Endpoint streams files via a local
+ * filesystem read (readfile()/fread()), not an HTTP request through this
+ * directory – these files only stop *direct* web requests to the folder.
+ *
+ * This does not protect files chosen from elsewhere in the Media Library
+ * (those keep their original location by design, to avoid moving files
+ * other parts of the site may reference); the REST/attachment-permalink
+ * guard (Attachment_Guard) is what protects those.
+ */
+function kitgenix_document_manager_protect_upload_dir(): void {
+    $info = kitgenix_document_manager_upload_dir();
+    $dir  = (string) ( $info['dir'] ?? '' );
+    // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable -- one-time directory check; WP_Filesystem is not guaranteed to be initialized this early (e.g. during upload/activation).
+    if ( $dir === '' || ! is_dir( $dir ) || ! is_writable( $dir ) ) {
+        return;
+    }
+
+    $htaccess = rtrim( $dir, '/' ) . '/.htaccess';
+    if ( ! file_exists( $htaccess ) ) {
+        $contents = "# Kitgenix Document Manager: block direct access, files are served via PHP.\n"
+            . "<IfModule mod_authz_core.c>\n\tRequire all denied\n</IfModule>\n"
+            . "<IfModule !mod_authz_core.c>\n\tOrder allow,deny\n\tDeny from all\n</IfModule>\n";
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents, WordPress.PHP.NoSilencedErrors.Discouraged -- one-time, idempotent hardening file; WP_Filesystem is not guaranteed to be initialized this early; failure is non-fatal (best-effort defense-in-depth, see Attachment_Guard for the primary access-control layer).
+        @file_put_contents( $htaccess, $contents );
+    }
+
+    $webconfig = rtrim( $dir, '/' ) . '/web.config';
+    if ( ! file_exists( $webconfig ) ) {
+        $contents = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<configuration>\n\t<system.webServer>\n\t\t<authorization>\n\t\t\t<deny users=\"*\" />\n\t\t</authorization>\n\t</system.webServer>\n</configuration>\n";
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents, WordPress.PHP.NoSilencedErrors.Discouraged -- one-time, idempotent hardening file; failure is non-fatal.
+        @file_put_contents( $webconfig, $contents );
+    }
+
+    $index = rtrim( $dir, '/' ) . '/index.php';
+    if ( ! file_exists( $index ) ) {
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents, WordPress.PHP.NoSilencedErrors.Discouraged -- one-time, idempotent hardening file; failure is non-fatal.
+        @file_put_contents( $index, "<?php\n// Silence is golden.\n" );
+    }
 }

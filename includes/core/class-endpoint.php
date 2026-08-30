@@ -59,6 +59,16 @@ final class Endpoint {
         );
 
         if ( empty( $access['allowed'] ) ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only check mirroring kitgenix_document_manager_evaluate_document_access()'s own share-link inspection.
+            $share_attempted = isset( $_GET['kitgenix_dm_share'] ) && '1' === sanitize_key( wp_unslash( (string) $_GET['kitgenix_dm_share'] ) );
+            if ( $share_attempted ) {
+                $link_check = kitgenix_document_manager_validate_share_link_request( $document_id );
+                if ( ! $link_check['valid'] && $link_check['code'] !== '' ) {
+                    $context = Event_Log::get_category_and_note( $link_check['code'] );
+                    Event_Log::record( 'share-link-denied', 'error', $context['note'], $link_check['code'] );
+                }
+            }
+
             if ( ! empty( $access['requires_login'] ) ) {
                 auth_redirect();
                 exit;
@@ -207,22 +217,48 @@ final class Endpoint {
         }
 
         header( 'Content-Type: ' . $mime );
+        header( 'Accept-Ranges: bytes' );
 
         // Content-Disposition filename handling:
         // - Provide a safe ASCII-ish fallback filename
         // - Provide RFC 5987 filename* for UTF-8 names
+        // Both values are stripped of quote/CR/LF characters defensively – filenames
+        // originate from sanitize_file_name()'d uploads, but this keeps header
+        // construction safe even against unexpected attachment metadata.
         $fallback_name = sanitize_file_name( $filename );
         if ( $fallback_name === '' ) {
             $fallback_name = 'document';
         }
-        $encoded_name = rawurlencode( $filename );
+        $fallback_name = str_replace( [ '"', "\r", "\n" ], '', $fallback_name );
+        $encoded_name  = rawurlencode( str_replace( [ "\r", "\n" ], '', $filename ) );
         header( 'Content-Disposition: ' . $disposition . '; filename="' . $fallback_name . '"; filename*=UTF-8\'\'' . $encoded_name );
 
-        if ( $size !== null ) {
-            header( 'Content-Length: ' . (string) $size );
+        $method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( sanitize_text_field( wp_unslash( (string) $_SERVER['REQUEST_METHOD'] ) ) ) : 'GET';
+
+        $range = self::resolve_range_request( $size, $etag ?? '', $mtime );
+
+        if ( is_array( $range ) && ! empty( $range['unsatisfiable'] ) ) {
+            status_header( 416 );
+            header( 'Content-Range: bytes */' . (string) ( $size ?? 0 ) );
+            exit;
         }
 
-        $method = isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( sanitize_text_field( wp_unslash( (string) $_SERVER['REQUEST_METHOD'] ) ) ) : 'GET';
+        $start  = 0;
+        $length = $size;
+
+        if ( is_array( $range ) && ! empty( $range['satisfiable'] ) && $size !== null ) {
+            $start  = (int) $range['start'];
+            $end    = (int) $range['end'];
+            $length = $end - $start + 1;
+
+            status_header( 206 );
+            header( 'Content-Range: bytes ' . $start . '-' . $end . '/' . (string) $size );
+        }
+
+        if ( $length !== null ) {
+            header( 'Content-Length: ' . (string) $length );
+        }
+
         if ( $method === 'HEAD' ) {
             exit;
         }
@@ -234,10 +270,18 @@ final class Endpoint {
             ob_end_clean();
         }
 
-        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile -- validated attachment path is streamed directly to the response.
-        $bytes_sent = @readfile( $filepath );
-        if ( false === $bytes_sent ) {
-            exit;
+        if ( is_array( $range ) && ! empty( $range['satisfiable'] ) ) {
+            self::stream_range( $filepath, $start, (int) $length );
+        } else {
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile -- validated attachment path is streamed directly to the response.
+            $bytes_sent = @readfile( $filepath );
+            if ( false === $bytes_sent ) {
+                exit;
+            }
+        }
+
+        if ( ! empty( $access['is_signed_request'] ) ) {
+            kitgenix_document_manager_increment_document_share_use_count( $document_id );
         }
 
         kitgenix_document_manager_record_document_analytics_event(
@@ -248,7 +292,128 @@ final class Endpoint {
             ]
         );
 
+        Lifecycle::maybe_record_transition( $document_id );
+
+        /**
+         * Fires immediately after a document's file has been streamed to the
+         * requester (or its metadata prepared for a HEAD request).
+         *
+         * @param int    $document_id   Document post ID.
+         * @param int    $attachment_id Attachment ID that was served.
+         * @param string $event_type    'view' (inline) or 'download' (attachment).
+         * @param array  $access        The access-decision array from
+         *                              kitgenix_document_manager_evaluate_document_access().
+         */
+        do_action( 'kitgenix_document_manager_document_served', $document_id, $attachment_id, $event_type, $access );
+
         exit;
+    }
+
+    /**
+     * Parse and validate an incoming Range request against the resource's
+     * known size/validators. Only a single byte-range is supported; a
+     * multi-range request, a malformed header, or a request without a
+     * strong validator to check `If-Range` against falls back to a full
+     * (200) response, per RFC 7233 §3.1 allowances.
+     *
+     * @return array{satisfiable?: bool, unsatisfiable?: bool, start?: int, end?: int}|null
+     */
+    private static function resolve_range_request( ?int $size, string $etag, ?int $mtime ): ?array {
+        if ( $size === null || $size <= 0 ) {
+            return null;
+        }
+
+        $raw_range = isset( $_SERVER['HTTP_RANGE'] ) ? sanitize_text_field( wp_unslash( (string) $_SERVER['HTTP_RANGE'] ) ) : '';
+        if ( $raw_range === '' ) {
+            return null;
+        }
+
+        // If-Range: only honor the Range request if the validator still matches
+        // (otherwise the underlying file changed – serve the full, current file).
+        $if_range = isset( $_SERVER['HTTP_IF_RANGE'] ) ? trim( sanitize_text_field( wp_unslash( (string) $_SERVER['HTTP_IF_RANGE'] ) ) ) : '';
+        if ( $if_range !== '' ) {
+            $matches_etag = ( $etag !== '' && $if_range === $etag );
+            $if_range_time = strtotime( $if_range );
+            $matches_time  = ( $if_range_time !== false && $mtime !== null && $if_range_time >= $mtime );
+            if ( ! $matches_etag && ! $matches_time ) {
+                return null;
+            }
+        }
+
+        // Reject multi-range requests (fall back to a full response) rather
+        // than attempt (and mis-format) a multipart/byteranges body.
+        if ( strpos( $raw_range, ',' ) !== false ) {
+            return null;
+        }
+
+        if ( ! preg_match( '/^bytes=(\d*)-(\d*)$/', trim( $raw_range ), $matches ) ) {
+            return null;
+        }
+
+        $start_raw = $matches[1];
+        $end_raw   = $matches[2];
+
+        if ( $start_raw === '' && $end_raw === '' ) {
+            return null;
+        }
+
+        if ( $start_raw === '' ) {
+            // Suffix range: last N bytes.
+            $suffix_length = (int) $end_raw;
+            if ( $suffix_length <= 0 ) {
+                return [ 'unsatisfiable' => true ];
+            }
+            $start = max( 0, $size - $suffix_length );
+            $end   = $size - 1;
+        } else {
+            $start = (int) $start_raw;
+            $end   = ( $end_raw === '' ) ? $size - 1 : (int) $end_raw;
+        }
+
+        if ( $start < 0 || $start >= $size || $end < $start ) {
+            return [ 'unsatisfiable' => true ];
+        }
+
+        if ( $end > $size - 1 ) {
+            $end = $size - 1;
+        }
+
+        return [ 'satisfiable' => true, 'start' => $start, 'end' => $end ];
+    }
+
+    /**
+     * Stream a byte range from disk in fixed-size chunks so large files
+     * never need to be held fully in PHP memory.
+     */
+    private static function stream_range( string $filepath, int $start, int $length ): void {
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- WP_Filesystem has no chunked/seekable read API suitable for byte-range streaming; validated local path only.
+        $handle = fopen( $filepath, 'rb' );
+        if ( $handle === false ) {
+            return;
+        }
+
+        $chunk_size  = 1048576; // 1MB
+        $remaining   = $length;
+
+        if ( fseek( $handle, $start ) !== 0 ) {
+            fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- pairs with the fopen() above.
+            return;
+        }
+
+        while ( $remaining > 0 && ! feof( $handle ) ) {
+            $read_size = (int) min( $chunk_size, $remaining );
+            $data      = fread( $handle, $read_size ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread -- chunked streaming read from a validated local path.
+            if ( false === $data || '' === $data ) {
+                break;
+            }
+
+            echo $data; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- raw binary file content streamed to the response.
+            flush();
+
+            $remaining -= strlen( $data );
+        }
+
+        fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- pairs with the fopen() above.
     }
 
     private static function send_404(): void {

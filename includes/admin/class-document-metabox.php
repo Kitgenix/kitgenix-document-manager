@@ -12,6 +12,10 @@ use function KitgenixDocumentManager\Core\kitgenix_document_manager_get_document
 use function KitgenixDocumentManager\Core\kitgenix_document_manager_get_document_schedule;
 use function KitgenixDocumentManager\Core\kitgenix_document_manager_get_document_schedule_status;
 use function KitgenixDocumentManager\Core\kitgenix_document_manager_get_document_share_expires_gmt;
+use function KitgenixDocumentManager\Core\kitgenix_document_manager_get_document_share_max_uses;
+use function KitgenixDocumentManager\Core\kitgenix_document_manager_get_document_share_use_count;
+use function KitgenixDocumentManager\Core\kitgenix_document_manager_get_version_meta;
+use function KitgenixDocumentManager\Core\kitgenix_document_manager_get_version_uploaded_by;
 use function KitgenixDocumentManager\Core\kitgenix_document_manager_get_document_visibility;
 use function KitgenixDocumentManager\Core\kitgenix_document_manager_get_document_signed_share_url;
 use function KitgenixDocumentManager\Core\kitgenix_document_manager_gmt_to_local_datetime_input;
@@ -104,6 +108,18 @@ final class Document_Metabox {
         echo '<p class="kitgenix-field-row"><label for="kitgenix_dm_share_expires"><strong>' . esc_html__( 'Signed share link expiry', 'kitgenix-document-manager' ) . '</strong></label></p>';
         echo '<div class="kitgenix-field-row"><input type="datetime-local" class="widefat" name="kitgenix_dm_share_expires" id="kitgenix_dm_share_expires" value="' . esc_attr( $share_expires_input ) . '" /></div>';
 
+        $share_max_uses  = kitgenix_document_manager_get_document_share_max_uses( (int) $post->ID );
+        $share_use_count = kitgenix_document_manager_get_document_share_use_count( (int) $post->ID );
+        echo '<p class="kitgenix-field-row"><label for="kitgenix_dm_share_max_uses"><strong>' . esc_html__( 'Maximum uses (0 = unlimited)', 'kitgenix-document-manager' ) . '</strong></label></p>';
+        echo '<div class="kitgenix-field-row"><input type="number" min="0" step="1" class="widefat" name="kitgenix_dm_share_max_uses" id="kitgenix_dm_share_max_uses" value="' . esc_attr( (string) $share_max_uses ) . '" /></div>';
+        echo '<p class="description">' . esc_html(
+            sprintf(
+                /* translators: %s: number of times the current signed link has been used */
+                __( 'Used so far: %s.', 'kitgenix-document-manager' ),
+                number_format_i18n( $share_use_count )
+            )
+        ) . '</p>';
+
         echo '<p class="kitgenix-field-row"><label for="kitgenix_dm_available_from"><strong>' . esc_html__( 'Available from', 'kitgenix-document-manager' ) . '</strong></label></p>';
         echo '<div class="kitgenix-field-row"><input type="datetime-local" class="widefat" name="kitgenix_dm_available_from" id="kitgenix_dm_available_from" value="' . esc_attr( $schedule['available_from_gmt'] !== '' ? kitgenix_document_manager_gmt_to_local_datetime_input( $schedule['available_from_gmt'] ) : '' ) . '" /></div>';
 
@@ -119,11 +135,26 @@ final class Document_Metabox {
             . '</label></p>';
 
         if ( $share_url !== '' ) {
+            $revoke_url = wp_nonce_url(
+                admin_url( 'admin-post.php?action=kitgenix_document_manager_share_revoke&document_id=' . (int) $post->ID ),
+                'kitgenix_document_manager_share_revoke',
+                'nonce'
+            );
+            $regenerate_url = wp_nonce_url(
+                admin_url( 'admin-post.php?action=kitgenix_document_manager_share_regenerate&document_id=' . (int) $post->ID ),
+                'kitgenix_document_manager_share_regenerate',
+                'nonce'
+            );
+
             echo '<p class="kitgenix-field-row"><strong>' . esc_html__( 'Signed share URL', 'kitgenix-document-manager' ) . '</strong></p>';
             echo '<div class="kitgenix-document-manager-meta-row kitgenix-field-row">'
                 . '<input type="text" class="widefat code" readonly="readonly" value="' . esc_attr( $share_url ) . '" />'
                 . '</div>';
-            echo '<p><button type="button" class="button" data-kitgenix-copy="' . esc_attr( $share_url ) . '" data-default-label="' . esc_attr__( 'Copy share link', 'kitgenix-document-manager' ) . '" data-copied-label="' . esc_attr__( 'Copied', 'kitgenix-document-manager' ) . '">' . esc_html__( 'Copy share link', 'kitgenix-document-manager' ) . '</button></p>';
+            echo '<p>'
+                . '<button type="button" class="button" data-kitgenix-copy="' . esc_attr( $share_url ) . '" data-default-label="' . esc_attr__( 'Copy share link', 'kitgenix-document-manager' ) . '" data-copied-label="' . esc_attr__( 'Copied', 'kitgenix-document-manager' ) . '">' . esc_html__( 'Copy share link', 'kitgenix-document-manager' ) . '</button> '
+                . '<a class="button" href="' . esc_url( $revoke_url ) . '" onclick="return window.confirm(\'' . esc_js( __( 'Revoke the current share link?', 'kitgenix-document-manager' ) ) . '\');">' . esc_html__( 'Revoke', 'kitgenix-document-manager' ) . '</a> '
+                . '<a class="button" href="' . esc_url( $regenerate_url ) . '" onclick="return window.confirm(\'' . esc_js( __( 'Regenerate the signing secret? All previously issued links stop working immediately.', 'kitgenix-document-manager' ) ) . '\');">' . esc_html__( 'Regenerate', 'kitgenix-document-manager' ) . '</a>'
+                . '</p>';
         }
 
         echo '<p class="description">' . esc_html__( 'Private documents require login. Restricted documents can also be limited by role, capability, user ID, share link, and schedule.', 'kitgenix-document-manager' ) . '</p>';
@@ -219,6 +250,8 @@ final class Document_Metabox {
         wp_nonce_field( $nonce_action, 'kitgenix_document_manager_file_nonce' );
 
         echo '<p><input type="file" name="kitgenix_document_manager_file" required="required" /></p>';
+        echo '<p><label for="kitgenix_dm_version_label">' . esc_html__( 'Version label (optional)', 'kitgenix-document-manager' ) . '</label><br />'
+            . '<input type="text" class="widefat" id="kitgenix_dm_version_label" name="version_label" placeholder="' . esc_attr__( 'e.g. 2024 policy update', 'kitgenix-document-manager' ) . '" /></p>';
         echo '<p><button type="submit" class="button button-primary">' . esc_html( $label ) . '</button></p>';
         echo '</form>';
 
@@ -234,7 +267,17 @@ final class Document_Metabox {
                 $p = is_string( $p ) ? $p : '';
                 $n = $p ? wp_basename( $p ) : (string) $vid;
                 $d = get_post_time( get_option( 'date_format' ), false, $att, true );
-                echo '<li>' . esc_html( $n ) . ' <span class="description">(' . esc_html( (string) $d ) . ')</span></li>';
+                $version_meta = kitgenix_document_manager_get_version_meta( $post_id, (int) $vid );
+                $uploaded_by  = kitgenix_document_manager_get_version_uploaded_by( (int) $vid );
+                $current_flag = ( $current_id > 0 && (int) $vid === $current_id ) ? ' – ' . esc_html__( 'current', 'kitgenix-document-manager' ) : '';
+
+                echo '<li>' . esc_html( $n ) . esc_html( $current_flag )
+                    . ( $version_meta['label'] !== '' ? ' – <strong>' . esc_html( $version_meta['label'] ) . '</strong>' : '' )
+                    . ' <span class="description">(' . esc_html( (string) $d )
+                    . ( $uploaded_by !== '' ? ', ' . esc_html( $uploaded_by ) : '' )
+                    . ')</span>'
+                    . ( $version_meta['note'] !== '' ? '<br /><span class="description">' . esc_html( $version_meta['note'] ) . '</span>' : '' )
+                    . '</li>';
             }
             echo '</ul>';
         }
@@ -270,6 +313,7 @@ final class Document_Metabox {
         $access_capability = isset( $_POST['kitgenix_dm_access_capability'] ) ? sanitize_key( wp_unslash( (string) $_POST['kitgenix_dm_access_capability'] ) ) : '';
         $access_user_ids = isset( $_POST['kitgenix_dm_access_user_ids'] ) ? kitgenix_document_manager_sanitize_user_ids( wp_unslash( (string) $_POST['kitgenix_dm_access_user_ids'] ) ) : [];
         $share_expires = isset( $_POST['kitgenix_dm_share_expires'] ) ? sanitize_text_field( wp_unslash( (string) $_POST['kitgenix_dm_share_expires'] ) ) : '';
+        $share_max_uses = isset( $_POST['kitgenix_dm_share_max_uses'] ) ? absint( wp_unslash( $_POST['kitgenix_dm_share_max_uses'] ) ) : 0;
         $available_from = isset( $_POST['kitgenix_dm_available_from'] ) ? sanitize_text_field( wp_unslash( (string) $_POST['kitgenix_dm_available_from'] ) ) : '';
         $archive_at = isset( $_POST['kitgenix_dm_archive_at'] ) ? sanitize_text_field( wp_unslash( (string) $_POST['kitgenix_dm_archive_at'] ) ) : '';
         $expires_at = isset( $_POST['kitgenix_dm_expires_at'] ) ? sanitize_text_field( wp_unslash( (string) $_POST['kitgenix_dm_expires_at'] ) ) : '';
@@ -302,6 +346,12 @@ final class Document_Metabox {
             update_post_meta( $post_id, '_kitgenix_document_manager_share_expires_gmt', $share_expires_gmt );
         } else {
             delete_post_meta( $post_id, '_kitgenix_document_manager_share_expires_gmt' );
+        }
+
+        if ( $share_max_uses > 0 ) {
+            update_post_meta( $post_id, '_kitgenix_document_manager_share_max_uses', $share_max_uses );
+        } else {
+            delete_post_meta( $post_id, '_kitgenix_document_manager_share_max_uses' );
         }
 
         if ( $available_from_gmt !== '' ) {
@@ -346,8 +396,8 @@ final class Document_Metabox {
         }
 
         $attach_id = Uploader::upload_and_attach( $post_id, \KitgenixDocumentManager\Core\Uploader::get_incoming_file() );
-        if ( $attach_id <= 0 ) {
-            self::redirect_with_notice( $post_id, 'upload_failed' );
+        if ( is_wp_error( $attach_id ) ) {
+            self::redirect_with_notice( $post_id, self::notice_key_for_upload_error( $attach_id, 'upload' ) );
         }
 
         Uploader::set_current_attachment( $post_id, $attach_id );
@@ -381,10 +431,11 @@ final class Document_Metabox {
         $keep_history = kitgenix_document_manager_is_versioning_enabled( $post_id );
         $settings = kitgenix_document_manager_get_settings();
         $delete_old = ! empty( $settings['delete_old_versions'] );
+        $version_label = isset( $_POST['version_label'] ) ? sanitize_text_field( wp_unslash( (string) $_POST['version_label'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified above via self::verify_post_nonce().
 
-        $new_id = Uploader::replace_file( $post_id, \KitgenixDocumentManager\Core\Uploader::get_incoming_file(), $keep_history, $delete_old );
-        if ( $new_id <= 0 ) {
-            self::redirect_with_notice( $post_id, 'replace_failed' );
+        $new_id = Uploader::replace_file( $post_id, \KitgenixDocumentManager\Core\Uploader::get_incoming_file(), $keep_history, $delete_old, $version_label );
+        if ( is_wp_error( $new_id ) ) {
+            self::redirect_with_notice( $post_id, self::notice_key_for_upload_error( $new_id, 'replace' ) );
         }
 
         self::redirect_with_notice( $post_id, 'replaced' );
@@ -431,6 +482,29 @@ final class Document_Metabox {
         return '1' === sanitize_text_field( wp_unslash( (string) $_POST[ $field ] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- callers verify nonce before reading request values.
     }
 
+    /**
+     * Turn an upload/replace WP_Error code into a specific notice key, falling
+     * back to the original generic '{action}_failed' key for unmapped codes.
+     */
+    private static function notice_key_for_upload_error( \WP_Error $error, string $action ): string {
+        $known_codes = [
+            'no_capability',
+            'no_tmp_file',
+            'dir_not_writable',
+            'upload_handler_error',
+            'missing_filepath',
+            'disallowed_extension',
+            'db_insert_failed',
+        ];
+
+        $code = $error->get_error_code();
+        if ( in_array( $code, $known_codes, true ) ) {
+            return $action . '_failed_' . $code;
+        }
+
+        return $action . '_failed';
+    }
+
     private static function redirect_with_notice( int $post_id, string $notice ): void {
         $url = get_edit_post_link( $post_id, 'raw' );
         if ( ! $url ) {
@@ -458,6 +532,22 @@ final class Document_Metabox {
             'replaced'      => [ 'success', __( 'File replaced. Stable link unchanged.', 'kitgenix-document-manager' ) ],
             'upload_failed' => [ 'error', __( 'Upload failed. Please check file type and try again.', 'kitgenix-document-manager' ) ],
             'replace_failed'=> [ 'error', __( 'Replace failed. Please check file type and try again.', 'kitgenix-document-manager' ) ],
+
+            'upload_failed_no_capability'        => [ 'error', __( 'Upload failed: you do not have permission to upload documents.', 'kitgenix-document-manager' ) ],
+            'upload_failed_no_tmp_file'           => [ 'error', __( 'Upload failed: no file was received by the server. Please try again.', 'kitgenix-document-manager' ) ],
+            'upload_failed_dir_not_writable'      => [ 'error', __( 'Upload failed: the uploads folder is not writable. Contact your host or administrator.', 'kitgenix-document-manager' ) ],
+            'upload_failed_upload_handler_error'  => [ 'error', __( 'Upload failed: WordPress could not process the file. Check the file and try again.', 'kitgenix-document-manager' ) ],
+            'upload_failed_missing_filepath'      => [ 'error', __( 'Upload failed: the file could not be found after processing. Please try again.', 'kitgenix-document-manager' ) ],
+            'upload_failed_disallowed_extension'  => [ 'error', __( 'Upload failed: this file type is not allowed. Check Settings → Allowed file types.', 'kitgenix-document-manager' ) ],
+            'upload_failed_db_insert_failed'      => [ 'error', __( 'Upload failed: the file could not be saved to the media library. Please try again.', 'kitgenix-document-manager' ) ],
+
+            'replace_failed_no_capability'        => [ 'error', __( 'Replace failed: you do not have permission to upload documents.', 'kitgenix-document-manager' ) ],
+            'replace_failed_no_tmp_file'          => [ 'error', __( 'Replace failed: no file was received by the server. Please try again.', 'kitgenix-document-manager' ) ],
+            'replace_failed_dir_not_writable'     => [ 'error', __( 'Replace failed: the uploads folder is not writable. Contact your host or administrator.', 'kitgenix-document-manager' ) ],
+            'replace_failed_upload_handler_error' => [ 'error', __( 'Replace failed: WordPress could not process the file. Check the file and try again.', 'kitgenix-document-manager' ) ],
+            'replace_failed_missing_filepath'     => [ 'error', __( 'Replace failed: the file could not be found after processing. Please try again.', 'kitgenix-document-manager' ) ],
+            'replace_failed_disallowed_extension' => [ 'error', __( 'Replace failed: this file type is not allowed. Check Settings → Allowed file types.', 'kitgenix-document-manager' ) ],
+            'replace_failed_db_insert_failed'     => [ 'error', __( 'Replace failed: the file could not be saved to the media library. Please try again.', 'kitgenix-document-manager' ) ],
         ];
         if ( ! isset( $map[ $n ] ) ) {
             return;

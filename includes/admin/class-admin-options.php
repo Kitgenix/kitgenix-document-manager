@@ -7,6 +7,7 @@ use KitgenixDocumentManager\Core\Capabilities;
 use function KitgenixDocumentManager\Core\kitgenix_document_manager_default_settings;
 use function KitgenixDocumentManager\Core\kitgenix_document_manager_normalize_visibility;
 use function KitgenixDocumentManager\Core\kitgenix_document_manager_normalize_extensions;
+use function KitgenixDocumentManager\Core\kitgenix_document_manager_extension_mime_map;
 
 final class Admin_Options {
 
@@ -52,9 +53,29 @@ final class Admin_Options {
         $clean = array_merge( $defaults, $existing );
 
         if ( array_key_exists( 'allowed_extensions', $settings ) ) {
-            $clean['allowed_extensions'] = kitgenix_document_manager_normalize_extensions( $settings['allowed_extensions'] ?? [] );
-            if ( empty( $clean['allowed_extensions'] ) ) {
-                $clean['allowed_extensions'] = $defaults['allowed_extensions'];
+            $requested = kitgenix_document_manager_normalize_extensions( $settings['allowed_extensions'] ?? [] );
+
+            // Intersect with the plugin's fixed, hand-audited extension→MIME
+            // map. This is a hard allowlist: dangerous types (php, svg, html,
+            // js, executables, etc.) are never in the map, so they cannot be
+            // enabled here regardless of what an admin types into this field.
+            $supported = array_keys( kitgenix_document_manager_extension_mime_map() );
+            $safe      = array_values( array_intersect( $requested, $supported ) );
+            $dropped   = array_values( array_diff( $requested, $supported ) );
+
+            $clean['allowed_extensions'] = ! empty( $safe ) ? $safe : $defaults['allowed_extensions'];
+
+            if ( ! empty( $dropped ) ) {
+                add_settings_error(
+                    'kitgenix_document_manager_settings',
+                    'kitgenix_document_manager_unsupported_extensions',
+                    sprintf(
+                        /* translators: %s: comma-separated list of unsupported extensions */
+                        __( 'These file extensions are not supported and were not saved: %s. Only extensions the plugin can safely verify (document/spreadsheet/presentation/text types) are allowed.', 'kitgenix-document-manager' ),
+                        implode( ', ', $dropped )
+                    ),
+                    'warning'
+                );
             }
         }
 
@@ -88,11 +109,6 @@ final class Admin_Options {
             if ( $clean['card_button_label'] === '' ) {
                 $clean['card_button_label'] = 'View';
             }
-        }
-
-        if ( array_key_exists( 'card_button_style_source', $settings ) ) {
-            $source = (string) ( $settings['card_button_style_source'] ?? 'custom' );
-            $clean['card_button_style_source'] = ( $source === 'theme' ) ? 'theme' : 'custom';
         }
 
         if ( array_key_exists( 'card_button_style', $settings ) ) {
@@ -130,10 +146,6 @@ final class Admin_Options {
         if ( array_key_exists( 'card_button_alignment', $settings ) ) {
             $align = sanitize_key( (string) ( $settings['card_button_alignment'] ?? 'center' ) );
             $clean['card_button_alignment'] = in_array( $align, [ 'justify', 'left', 'center', 'right' ], true ) ? $align : 'center';
-        }
-
-        if ( array_key_exists( 'card_button_full_width', $settings ) ) {
-            $clean['card_button_full_width'] = ! empty( $settings['card_button_full_width'] );
         }
 
         $hex_keys = [

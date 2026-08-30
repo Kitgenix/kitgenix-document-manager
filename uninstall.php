@@ -13,8 +13,15 @@ $kitgenix_dm_delete_data = ! empty( $kitgenix_dm_settings['delete_data_on_uninst
 
 delete_option( $kitgenix_dm_opt_name );
 delete_option( 'kitgenix_document_manager_event_log' );
+delete_option( 'kitgenix_document_manager_db_version' );
 
 delete_transient( 'kitgenix_document_manager_site_health' );
+
+$kitgenix_dm_lifecycle_timestamp = wp_next_scheduled( 'kitgenix_document_manager_lifecycle_check' );
+if ( $kitgenix_dm_lifecycle_timestamp ) {
+    wp_unschedule_event( $kitgenix_dm_lifecycle_timestamp, 'kitgenix_document_manager_lifecycle_check' );
+}
+wp_clear_scheduled_hook( 'kitgenix_document_manager_lifecycle_check' );
 
 if ( ! $kitgenix_dm_delete_data ) {
     return;

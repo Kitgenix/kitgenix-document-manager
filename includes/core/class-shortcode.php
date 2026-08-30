@@ -47,7 +47,7 @@ final class Shortcode {
         );
 
         if ( empty( $access['allowed'] ) ) {
-            return '';
+            return self::render_unavailable_notice_for_editors( $post );
         }
 
         $url = kitgenix_document_manager_stable_url( $slug );
@@ -72,9 +72,7 @@ final class Shortcode {
                 'slug'         => '',
                 'slugs'        => '',
                 'button_label' => '',
-                'button_style_source' => '',
                 'button_style' => '',
-                'button_full_width' => '',
                 'image_size'   => '',
                 'meta_align'   => '',
                 'button_align' => '',
@@ -99,19 +97,10 @@ final class Shortcode {
             }
         }
 
-        $button_style_source = (string) ( $settings['card_button_style_source'] ?? 'custom' );
-        $button_style_source = ( $button_style_source === 'theme' ) ? 'theme' : 'custom';
-
-        $button_style_source_raw = sanitize_key( (string) ( $atts['button_style_source'] ?? '' ) );
-        if ( $button_style_source_raw === 'theme' || $button_style_source_raw === 'custom' ) {
-            $button_style_source = $button_style_source_raw;
-        }
-
         $open_new_tab = (bool) ( $settings['card_open_new_tab'] ?? false );
         $show_type    = (bool) ( $settings['card_show_file_type'] ?? true );
         $show_size    = (bool) ( $settings['card_show_file_size'] ?? true );
         $show_description = (bool) ( $settings['card_show_description'] ?? false );
-        $button_full_width = (bool) ( $settings['card_button_full_width'] ?? false );
 
         $image_size = absint( $settings['card_image_size'] ?? 96 );
         if ( $image_size < 32 || $image_size > 256 ) {
@@ -146,37 +135,23 @@ final class Shortcode {
             $button_align = $button_align_raw;
         }
 
-        $button_full_width_raw = strtolower( trim( (string) ( $atts['button_full_width'] ?? '' ) ) );
-        if ( $button_full_width_raw !== '' ) {
-            $button_full_width = in_array( $button_full_width_raw, [ '1', 'true', 'yes', 'y', 'on' ], true );
-        }
-
-        if ( $button_full_width ) {
-            $button_align = 'justify';
-        }
-
-        $card_classes = 'kgx-dm-card kgx-dm-card--meta-' . $meta_align . ' kgx-dm-card--button-' . $button_align;
-        if ( $button_full_width ) {
-            $card_classes .= ' kgx-dm-card--button-full-width';
-        }
+        $card_classes = 'kitgenix-document-manager-card kitgenix-document-manager-card--meta-' . $meta_align . ' kitgenix-document-manager-card--button-' . $button_align;
 
         $style_vars = [];
-        $style_vars[] = '--kgx-dm-thumb-size:' . $image_size . 'px';
+        $style_vars[] = '--kitgenix-document-manager-thumb-size:' . $image_size . 'px';
 
-        if ( $button_style_source !== 'theme' ) {
-            $map = [
-                'card_button_text_color'        => '--kgx-dm-btn-text',
-                'card_button_bg_color'          => '--kgx-dm-btn-bg',
-                'card_button_border_color'      => '--kgx-dm-btn-border',
-                'card_button_hover_text_color'  => '--kgx-dm-btn-hover-text',
-                'card_button_hover_bg_color'    => '--kgx-dm-btn-hover-bg',
-                'card_button_hover_border_color'=> '--kgx-dm-btn-hover-border',
-            ];
-            foreach ( $map as $setting_key => $css_var ) {
-                $val = trim( (string) ( $settings[ $setting_key ] ?? '' ) );
-                if ( $val !== '' ) {
-                    $style_vars[] = $css_var . ':' . $val;
-                }
+        $map = [
+            'card_button_text_color'        => '--kitgenix-document-manager-btn-text',
+            'card_button_bg_color'          => '--kitgenix-document-manager-btn-bg',
+            'card_button_border_color'      => '--kitgenix-document-manager-btn-border',
+            'card_button_hover_text_color'  => '--kitgenix-document-manager-btn-hover-text',
+            'card_button_hover_bg_color'    => '--kitgenix-document-manager-btn-hover-bg',
+            'card_button_hover_border_color'=> '--kitgenix-document-manager-btn-hover-border',
+        ];
+        foreach ( $map as $setting_key => $css_var ) {
+            $val = trim( (string) ( $settings[ $setting_key ] ?? '' ) );
+            if ( $val !== '' ) {
+                $style_vars[] = $css_var . ':' . $val;
             }
         }
 
@@ -186,17 +161,11 @@ final class Shortcode {
         }
 
         $button_style = (string) ( $settings['card_button_style'] ?? 'outline' );
-        $button_style = in_array( $button_style, [ 'outline', 'solid', 'theme' ], true ) ? $button_style : 'outline';
-        if ( $button_style_source === 'theme' ) {
-            $button_style = 'theme';
-        }
+        $button_style = ( $button_style === 'solid' ) ? 'solid' : 'outline';
 
         $button_style_raw = strtolower( trim( (string) ( $atts['button_style'] ?? '' ) ) );
         if ( $button_style_raw !== '' ) {
-            $button_style = in_array( $button_style_raw, [ 'outline', 'solid', 'theme' ], true ) ? $button_style_raw : 'outline';
-            if ( $button_style_raw === 'theme' ) {
-                $button_style_source = 'theme';
-            }
+            $button_style = ( $button_style_raw === 'solid' ) ? 'solid' : 'outline';
         }
 
         $new_tab_raw = strtolower( trim( (string) ( $atts['new_tab'] ?? '' ) ) );
@@ -219,7 +188,22 @@ final class Shortcode {
             $show_description = in_array( $show_desc_raw, [ '1', 'true', 'yes', 'y', 'on' ], true );
         }
 
-        $slugs = self::parse_shortcode_slugs( $atts );
+        $slugs_raw = (string) ( $atts['slugs'] ?? '' );
+        if ( $slugs_raw !== '' ) {
+            $parts = preg_split( '/\s*,\s*/', trim( $slugs_raw ), -1, PREG_SPLIT_NO_EMPTY );
+            $parts = is_array( $parts ) ? $parts : [];
+            $slugs = [];
+            foreach ( $parts as $p ) {
+                $s = sanitize_title_with_dashes( (string) $p );
+                if ( $s !== '' ) {
+                    $slugs[] = $s;
+                }
+            }
+            $slugs = array_values( array_unique( $slugs ) );
+        } else {
+            $slug = sanitize_title_with_dashes( (string) ( $atts['slug'] ?? '' ) );
+            $slugs = $slug !== '' ? [ $slug ] : [];
+        }
 
         if ( empty( $slugs ) ) {
             return '';
@@ -234,7 +218,7 @@ final class Shortcode {
                 continue;
             }
 
-            $card = self::render_document_card( $post, $slug, $button_label, $button_style_source, $button_style, $open_new_tab, $show_type, $show_size, $show_description, $card_classes, $card_style_attr, $button_full_width );
+            $card = self::render_document_card( $post, $slug, $button_label, $button_style, $open_new_tab, $show_type, $show_size, $show_description, $card_classes, $card_style_attr );
             if ( $card !== '' ) {
                 $cards .= $card;
             }
@@ -245,39 +229,37 @@ final class Shortcode {
         }
 
         if ( count( $slugs ) > 1 ) {
-            return '<div class="kgx-dm-cards">' . $cards . '</div>';
+            return '<div class="kitgenix-document-manager-cards" role="list" aria-label="' . esc_attr__( 'Documents', 'kitgenix-document-manager' ) . '">' . $cards . '</div>';
         }
 
         return $cards;
     }
 
-    private static function parse_shortcode_slugs( array $atts ): array {
-        $raw_values = [];
-
-        foreach ( [ 'slugs', 'slug' ] as $key ) {
-            $raw = trim( (string) ( $atts[ $key ] ?? '' ) );
-            if ( $raw !== '' ) {
-                $raw_values[] = $raw;
-            }
+    /**
+     * For a document the current visitor cannot access, render nothing to
+     * the public (so a restricted/private document's existence is never
+     * disclosed) – but if the *editor viewing the page* can manage
+     * documents, show a small inline note explaining why, so a genuinely
+     * empty shortcode isn't mistaken for a bug.
+     */
+    private static function render_unavailable_notice_for_editors( \WP_Post $post ): string {
+        if ( ! current_user_can( Capabilities::CAPABILITY ) ) {
+            return '';
         }
 
-        if ( empty( $raw_values ) ) {
-            return [];
-        }
+        $lifecycle = kitgenix_document_manager_get_document_lifecycle_state( (int) $post->ID );
+        $label     = (string) ( $lifecycle['label'] ?? '' );
 
-        $slugs = [];
-        foreach ( $raw_values as $raw ) {
-            $parts = preg_split( '/[\s,|;]+/', $raw, -1, PREG_SPLIT_NO_EMPTY );
-            $parts = is_array( $parts ) ? $parts : [];
-            foreach ( $parts as $part ) {
-                $slug = sanitize_title_with_dashes( (string) $part );
-                if ( $slug !== '' ) {
-                    $slugs[] = $slug;
-                }
-            }
-        }
-
-        return array_values( array_unique( $slugs ) );
+        return '<div class="kitgenix-document-manager-card kitgenix-document-manager-card--unavailable" role="note">'
+            . '<p class="kitgenix-document-manager-card__unavailable-text">'
+            . sprintf(
+                /* translators: 1: document title, 2: lifecycle status label. Only shown to users who can manage documents. */
+                esc_html__( '"%1$s" is not visible to other visitors right now (status: %2$s).', 'kitgenix-document-manager' ),
+                esc_html( get_the_title( $post ) ),
+                esc_html( $label )
+            )
+            . '</p>'
+            . '</div>';
     }
 
     private static function ensure_public_styles(): void {
@@ -301,7 +283,7 @@ final class Shortcode {
         wp_enqueue_style( 'kitgenix-document-manager-public' );
     }
 
-    private static function render_document_card( \WP_Post $post, string $slug, string $button_label, string $button_style_source, string $button_style, bool $open_new_tab, bool $show_type, bool $show_size, bool $show_description, string $card_classes, string $card_style_attr, bool $button_full_width ): string {
+    private static function render_document_card( \WP_Post $post, string $slug, string $button_label, string $button_style, bool $open_new_tab, bool $show_type, bool $show_size, bool $show_description, string $card_classes, string $card_style_attr ): string {
         $document_id = (int) $post->ID;
         $access = kitgenix_document_manager_evaluate_document_access(
             $document_id,
@@ -311,10 +293,13 @@ final class Shortcode {
         );
 
         if ( empty( $access['allowed'] ) ) {
-            return '';
+            return self::render_unavailable_notice_for_editors( $post );
         }
 
         $attachment_id = (int) get_post_meta( $document_id, '_kitgenix_document_manager_current_attachment_id', true );
+        if ( $attachment_id <= 0 ) {
+            return '';
+        }
 
         $stable_url = kitgenix_document_manager_stable_url( $slug );
         $title      = get_the_title( $post );
@@ -328,21 +313,19 @@ final class Shortcode {
         $type_label = '';
         $size_label = '';
 
-        if ( $attachment_id > 0 ) {
-            $filepath = get_attached_file( $attachment_id );
-            $filepath = is_string( $filepath ) ? $filepath : '';
+        $filepath = get_attached_file( $attachment_id );
+        $filepath = is_string( $filepath ) ? $filepath : '';
 
-            if ( $filepath !== '' ) {
-                $ext = strtolower( (string) pathinfo( $filepath, PATHINFO_EXTENSION ) );
-                if ( $ext !== '' ) {
-                    $type_label = strtoupper( $ext );
-                }
+        if ( $filepath !== '' ) {
+            $ext = strtolower( (string) pathinfo( $filepath, PATHINFO_EXTENSION ) );
+            if ( $ext !== '' ) {
+                $type_label = strtoupper( $ext );
+            }
 
-                if ( file_exists( $filepath ) && is_readable( $filepath ) ) {
-                    $size = @filesize( $filepath );
-                    if ( $size !== false && (int) $size >= 0 && function_exists( 'size_format' ) ) {
-                        $size_label = size_format( (int) $size );
-                    }
+            if ( file_exists( $filepath ) && is_readable( $filepath ) ) {
+                $size = @filesize( $filepath );
+                if ( $size !== false && (int) $size >= 0 && function_exists( 'size_format' ) ) {
+                    $size_label = size_format( (int) $size );
                 }
             }
         }
@@ -361,7 +344,7 @@ final class Shortcode {
                 'thumbnail',
                 false,
                 [
-                    'class' => 'kgx-dm-card__img',
+                    'class' => 'kitgenix-document-manager-card__img',
                     'alt'   => esc_attr( $title ),
                     'loading' => 'lazy',
                 ]
@@ -372,12 +355,12 @@ final class Shortcode {
             $icon = wp_mime_type_icon( $attachment_id );
             $icon = is_string( $icon ) ? $icon : '';
             if ( $icon !== '' ) {
-                $preview_html = '<img class="kgx-dm-card__img kgx-dm-card__img--icon" src="' . esc_url( $icon ) . '" alt="' . esc_attr( $title ) . '" loading="lazy" />';
+                $preview_html = '<img class="kitgenix-document-manager-card__img kitgenix-document-manager-card__img--icon" src="' . esc_url( $icon ) . '" alt="' . esc_attr( $title ) . '" loading="lazy" />';
             }
         }
 
         if ( $preview_html === '' ) {
-            $preview_html = '<div class="kgx-dm-card__img kgx-dm-card__img--placeholder" aria-hidden="true"></div>';
+            $preview_html = '<div class="kitgenix-document-manager-card__img kitgenix-document-manager-card__img--placeholder" aria-hidden="true"></div>';
         }
 
         $link_attrs = '';
@@ -385,32 +368,26 @@ final class Shortcode {
             $link_attrs = ' target="_blank" rel="noopener noreferrer"';
         }
 
-        $button_class = 'kgx-dm-card__button';
-        if ( $button_style_source === 'theme' ) {
-            $button_class = 'kgx-dm-card__button--theme wp-block-button__link wp-element-button button';
-        } elseif ( $button_style === 'solid' ) {
-            $button_class .= ' kgx-dm-card__button--solid';
-        }
-
-        if ( $button_full_width ) {
-            $button_class .= ' kgx-dm-card__button--full-width';
+        $button_class = 'kitgenix-document-manager-card__button';
+        if ( $button_style === 'solid' ) {
+            $button_class .= ' kitgenix-document-manager-card__button--solid';
         }
 
         $meta_parts = '';
         if ( $show_type && $type_label !== '' ) {
-            $meta_parts .= '<div class="kgx-dm-card__meta"><span class="kgx-dm-card__meta-label">' . esc_html__( 'File Type', 'kitgenix-document-manager' ) . '</span><span class="kgx-dm-card__meta-value">' . esc_html( $type_label ) . '</span></div>';
+            $meta_parts .= '<div class="kitgenix-document-manager-card__meta"><span class="kitgenix-document-manager-card__meta-label">' . esc_html__( 'File Type', 'kitgenix-document-manager' ) . '</span><span class="kitgenix-document-manager-card__meta-value">' . esc_html( $type_label ) . '</span></div>';
         }
         if ( $show_size && $size_label !== '' ) {
-            $meta_parts .= '<div class="kgx-dm-card__meta"><span class="kgx-dm-card__meta-label">' . esc_html__( 'File Size', 'kitgenix-document-manager' ) . '</span><span class="kgx-dm-card__meta-value">' . esc_html( $size_label ) . '</span></div>';
+            $meta_parts .= '<div class="kitgenix-document-manager-card__meta"><span class="kitgenix-document-manager-card__meta-label">' . esc_html__( 'File Size', 'kitgenix-document-manager' ) . '</span><span class="kitgenix-document-manager-card__meta-value">' . esc_html( $size_label ) . '</span></div>';
         }
 
         return ''
-            . '<div class="' . esc_attr( $card_classes ) . '" data-kgx-dm-slug="' . esc_attr( $slug ) . '"' . $card_style_attr . '>'
-            . '  <a class="kgx-dm-card__preview" href="' . esc_url( $stable_url ) . '"' . $link_attrs . '>' . $preview_html . '</a>'
-            . '  <div class="kgx-dm-card__title">' . esc_html( $title ) . '</div>'
-            . ( $description !== '' ? '  <div class="kgx-dm-card__desc">' . esc_html( $description ) . '</div>' : '' )
-            . '  <div class="kgx-dm-card__meta-grid">' . $meta_parts . '</div>'
-            . '  <div class="kgx-dm-card__actions">'
+            . '<div class="' . esc_attr( $card_classes ) . '" data-kitgenix-document-manager-slug="' . esc_attr( $slug ) . '"' . $card_style_attr . '>'
+            . '  <a class="kitgenix-document-manager-card__preview" href="' . esc_url( $stable_url ) . '"' . $link_attrs . '>' . $preview_html . '</a>'
+            . '  <div class="kitgenix-document-manager-card__title">' . esc_html( $title ) . '</div>'
+            . ( $description !== '' ? '  <div class="kitgenix-document-manager-card__desc">' . esc_html( $description ) . '</div>' : '' )
+            . '  <div class="kitgenix-document-manager-card__meta-grid">' . $meta_parts . '</div>'
+            . '  <div class="kitgenix-document-manager-card__actions">'
             . '    <a class="' . esc_attr( $button_class ) . '" href="' . esc_url( $stable_url ) . '"' . $link_attrs . '>' . esc_html( $button_label ) . '</a>'
             . '  </div>'
             . '</div>';

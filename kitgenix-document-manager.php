@@ -8,9 +8,9 @@
  * Author Support URI: https://kitgenix.com/plugins/kitgenix-document-manager/support
  * Feature Request URI: https://kitgenix.com/plugins/kitgenix-document-manager/feature-request
  * Description:       Manage document downloads with stable links, granular access, lifecycle scheduling, and usage analytics.
- * Version:           1.1.3
+ * Version:           2.0.0
  * Requires at least: 6.0
- * Tested up to:      7.0
+ * Tested up to:      7.1
  * Requires PHP:      8.1
  * Author:            Kitgenix
  * Author URI:        https://kitgenix.com/
@@ -30,8 +30,8 @@ if ( ! function_exists( 'kitgenix_get_admin_menu_icon' ) ) {
     function kitgenix_get_admin_menu_icon( string $plugin_file ): string {
         $plugin_dir = dirname( $plugin_file ) . '/';
         $icon_paths = [
-            $plugin_dir . 'assets/images/logos/kitgenix-wordpress-admin-icon.svg',
-            $plugin_dir . 'assets/images/logos/kitgenix-custom-wordpress-admin-icon.svg',
+            $plugin_dir . 'assets/images/logos/kitgenix-wordpress-admin-menu-favicon.svg',
+            $plugin_dir . 'assets/images/logos/kitgenix-black-favicon.svg',
         ];
 
         foreach ( $icon_paths as $icon_path ) {
@@ -401,11 +401,19 @@ if ( ! function_exists( 'kitgenix_render_admin_page' ) ) {
             ],
             [
                 'id'       => 'multistore',
-                'name'     => __( 'MultiStore Sync', 'kitgenix-document-manager' ),
-                'slug'     => 'kitgenix-multistore-sync',
-                'file'     => 'kitgenix-multistore-sync/kitgenix-multistore-sync.php',
-                'page'     => 'kitgenix-multistore-sync',
+                'name'     => __( 'MultiStore for WooCommerce', 'kitgenix-document-manager' ),
+                'slug'     => 'kitgenix-multistore-sync-for-woocommerce',
+                'file'     => 'kitgenix-multistore-sync-for-woocommerce/kitgenix-multistore-sync-for-woocommerce.php',
+                'page'     => 'kitgenix-multistore-sync-for-woocommerce',
                 'requires' => __( 'Sync WooCommerce products, prices, media, and metadata between multiple stores with a secure master-child architecture.', 'kitgenix-document-manager' ),
+            ],
+            [
+                'id'       => 'image_optimizer',
+                'name'     => __( 'Image Optimizer', 'kitgenix-document-manager' ),
+                'slug'     => 'kitgenix-image-optimizer',
+                'file'     => 'kitgenix-image-optimizer/kitgenix-image-optimizer.php',
+                'page'     => 'kitgenix-image-optimizer',
+                'requires' => __( 'Optimize, compress, and resize images in your WordPress media library with automatic on-upload processing and bulk optimization tools.', 'kitgenix-document-manager' ),
             ],
             [
                 'id'       => 'affiliate',
@@ -426,15 +434,17 @@ if ( ! function_exists( 'kitgenix_render_admin_page' ) ) {
         $wporg_active_installs = kitgenix_hub_get_wporg_active_installs( $slugs );
         $wporg_ratings        = kitgenix_hub_get_wporg_ratings( $slugs );
         $wporg_media          = kitgenix_hub_get_wporg_media( $slugs );
-        $logo_url             = plugins_url( 'assets/images/logos/kitgenix-favicon-purple.svg', __FILE__ );
+        $logo_url             = plugins_url( 'assets/images/logos/kitgenix-primary-favicon.svg', __FILE__ );
 
-        echo '<div class="wrap plugin-install-php kitgenix-hub-wrap">'
-            . '<div class="kitgenix-hub">'
+        echo '<div class="wrap kitgenix-admin-app plugin-install-php">'
             . '<div class="kitgenix-hub-header">'
             . '<div class="kitgenix-hub-brand">'
-            . '<img class="kitgenix-hub-logo" src="' . esc_url( $logo_url ) . '" alt="' . esc_attr__( 'Kitgenix', 'kitgenix-document-manager' ) . '" />'
+            . '<span class="kitgenix-topbar-brand">'
+            . '<img class="kitgenix-hub-logo" src="' . esc_url( $logo_url ) . '" alt="' . esc_attr__( 'Kitgenix', 'kitgenix-document-manager' ) . '" width="30" height="30" />'
+            . '</span>'
+            . '<span class="kitgenix-topbar-divider" aria-hidden="true"></span>'
             . '<div class="kitgenix-hub-brand-copy">'
-            . '<h1 class="kitgenix-hub-title">' . esc_html__( 'Discover and manage every Kitgenix plugin from one screen.', 'kitgenix-document-manager' ) . '</h1>'
+            . '<h1 class="kitgenix-hub-title">' . esc_html__( 'Kitgenix', 'kitgenix-document-manager' ) . '</h1>'
             . '<p class="kitgenix-hub-description">' . esc_html__( 'Install, activate, open, and review Kitgenix plugins.', 'kitgenix-document-manager' ) . '</p>'
             . '</div>'
             . '</div>'
@@ -451,6 +461,8 @@ if ( ! function_exists( 'kitgenix_render_admin_page' ) ) {
             . '<a href="https://github.com/kitgenix" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub"><img src="' . esc_url( plugins_url( 'assets/images/social-media/github-solid.svg', __FILE__ ) ) . '" alt="" width="13" height="13" aria-hidden="true" /><span class="screen-reader-text">GitHub</span></a>'
             . '</div>'
             . '</div>'
+            . '<div class="kitgenix-hub-wrap">'
+            . '<div class="kitgenix-hub">'
             . '<div class="kitgenix-hub-grid">';
         foreach ( $plugins as $p ) {
             $id        = (string) $p['id'];
@@ -565,7 +577,7 @@ if ( ! function_exists( 'kitgenix_render_admin_page' ) ) {
                 . '</div>';
         }
 
-        echo '</div></div></div>';
+        echo '</div></div></div></div>';
     }
 }
 
@@ -575,15 +587,15 @@ if ( ! function_exists( 'kitgenix_document_manager_register_admin_ui_style' ) ) 
             return;
         }
 
-        if ( function_exists( 'wp_style_is' ) && wp_style_is( 'kitgenix-admin-ui', 'registered' ) ) {
+        if ( function_exists( 'wp_style_is' ) && wp_style_is( 'kitgenix-document-manager-admin-ui', 'registered' ) ) {
             return;
         }
 
-        $ver      = defined( 'KITGENIX_DOCUMENT_MANAGER_VERSION' ) ? (string) KITGENIX_DOCUMENT_MANAGER_VERSION : '1.1.3';
+        $ver      = defined( 'KITGENIX_DOCUMENT_MANAGER_VERSION' ) ? (string) KITGENIX_DOCUMENT_MANAGER_VERSION : '2.0.0';
         $css_file = plugin_dir_path( __FILE__ ) . 'assets/css/kitgenix-admin-ui.css';
         $css_ver  = file_exists( $css_file ) ? (string) filemtime( $css_file ) : $ver;
 
-        wp_register_style( 'kitgenix-admin-ui', plugins_url( 'assets/css/kitgenix-admin-ui.css', __FILE__ ), [], $css_ver );
+        wp_register_style( 'kitgenix-document-manager-admin-ui', plugins_url( 'assets/css/kitgenix-admin-ui.css', __FILE__ ), [], $css_ver );
     }
 }
 add_action( 'admin_enqueue_scripts', 'kitgenix_document_manager_register_admin_ui_style', 5 );
@@ -602,19 +614,19 @@ add_action( 'admin_enqueue_scripts', function ( string $hook_suffix ): void {
         return;
     }
 
-    $ver = defined( 'KITGENIX_DOCUMENT_MANAGER_VERSION' ) ? (string) KITGENIX_DOCUMENT_MANAGER_VERSION : '1.1.3';
+    $ver = defined( 'KITGENIX_DOCUMENT_MANAGER_VERSION' ) ? (string) KITGENIX_DOCUMENT_MANAGER_VERSION : '2.0.0';
     wp_register_style( 'kitgenix-hub', plugins_url( 'assets/css/kitgenix-hub.css', __FILE__ ), [], $ver );
     wp_enqueue_style( 'kitgenix-hub' );
 
-    wp_register_style( 'kitgenix-admin-ui', plugins_url( 'assets/css/kitgenix-admin-ui.css', __FILE__ ), [], $ver );
-    wp_enqueue_style( 'kitgenix-admin-ui' );
+    wp_register_style( 'kitgenix-document-manager-admin-ui', plugins_url( 'assets/css/kitgenix-admin-ui.css', __FILE__ ), [], $ver );
+    wp_enqueue_style( 'kitgenix-document-manager-admin-ui' );
 } );
 
 // -----------------------------------------------------------------------------
 // Constants (guarded)
 // -----------------------------------------------------------------------------
 if ( ! defined( 'KITGENIX_DOCUMENT_MANAGER_VERSION' ) ) {
-    define( 'KITGENIX_DOCUMENT_MANAGER_VERSION', '1.1.3' );
+    define( 'KITGENIX_DOCUMENT_MANAGER_VERSION', '2.0.0' );
 }
 if ( ! defined( 'KITGENIX_DOCUMENT_MANAGER_FILE' ) ) {
     define( 'KITGENIX_DOCUMENT_MANAGER_FILE', __FILE__ );
@@ -647,6 +659,8 @@ require_once KITGENIX_DOCUMENT_MANAGER_INCLUDES_DIR . 'core/class-capabilities.p
 require_once KITGENIX_DOCUMENT_MANAGER_INCLUDES_DIR . 'core/class-cpt.php';
 require_once KITGENIX_DOCUMENT_MANAGER_INCLUDES_DIR . 'core/class-uploader.php';
 require_once KITGENIX_DOCUMENT_MANAGER_INCLUDES_DIR . 'core/class-endpoint.php';
+require_once KITGENIX_DOCUMENT_MANAGER_INCLUDES_DIR . 'core/class-attachment-guard.php';
+require_once KITGENIX_DOCUMENT_MANAGER_INCLUDES_DIR . 'core/class-lifecycle.php';
 require_once KITGENIX_DOCUMENT_MANAGER_INCLUDES_DIR . 'core/class-script-handler.php';
 require_once KITGENIX_DOCUMENT_MANAGER_INCLUDES_DIR . 'core/class-shortcode.php';
 require_once KITGENIX_DOCUMENT_MANAGER_INCLUDES_DIR . 'core/class-rest.php';
@@ -668,9 +682,13 @@ add_action( 'plugins_loaded', static function (): void {
     \KitgenixDocumentManager\Core\Capabilities::init();
     \KitgenixDocumentManager\Core\CPT::init();
     \KitgenixDocumentManager\Core\Endpoint::init();
+    \KitgenixDocumentManager\Core\Attachment_Guard::init();
+    \KitgenixDocumentManager\Core\Lifecycle::init();
     \KitgenixDocumentManager\Core\Script_Handler::init();
     \KitgenixDocumentManager\Core\Shortcode::init();
     \KitgenixDocumentManager\Core\Rest::init();
+
+    kitgenix_document_manager_maybe_upgrade();
 
     if ( is_admin() ) {
         // Ensure caps exist even after plugin updates.
@@ -682,6 +700,33 @@ add_action( 'plugins_loaded', static function (): void {
 } );
 
 // -----------------------------------------------------------------------------
+// Idempotent upgrade routine (1.x -> 2.0.0 and beyond)
+// -----------------------------------------------------------------------------
+if ( ! function_exists( 'kitgenix_document_manager_maybe_upgrade' ) ) {
+    /**
+     * Runs on every request (cheap: a single option read) and only performs
+     * work when the stored data-shape version is behind the code's version.
+     * Safe to run repeatedly; never deletes documents, versions, or files.
+     */
+    function kitgenix_document_manager_maybe_upgrade(): void {
+        $option_key = 'kitgenix_document_manager_db_version';
+        $current    = (string) get_option( $option_key, '' );
+        $target     = \KitgenixDocumentManager\Core\kitgenix_document_manager_db_version();
+
+        if ( $current === $target ) {
+            return;
+        }
+
+        // 1.x installs never wrote this option – treat empty as "pre-2.0.0".
+        \KitgenixDocumentManager\Core\CPT::migrate_legacy_posts();
+        \KitgenixDocumentManager\Core\kitgenix_document_manager_ensure_upload_dir();
+        \KitgenixDocumentManager\Core\Lifecycle::schedule();
+
+        update_option( $option_key, $target, false );
+    }
+}
+
+// -----------------------------------------------------------------------------
 // Activation / Deactivation
 // -----------------------------------------------------------------------------
 register_activation_hook( __FILE__, static function (): void {
@@ -689,10 +734,15 @@ register_activation_hook( __FILE__, static function (): void {
     \KitgenixDocumentManager\Core\CPT::migrate_legacy_posts();
     \KitgenixDocumentManager\Core\Endpoint::add_rewrite_rules();
     \KitgenixDocumentManager\Core\Capabilities::add_caps();
+    \KitgenixDocumentManager\Core\kitgenix_document_manager_ensure_upload_dir();
+    \KitgenixDocumentManager\Core\Lifecycle::schedule();
+
+    update_option( 'kitgenix_document_manager_db_version', \KitgenixDocumentManager\Core\kitgenix_document_manager_db_version(), false );
 
     flush_rewrite_rules();
 } );
 
 register_deactivation_hook( __FILE__, static function (): void {
+    \KitgenixDocumentManager\Core\Lifecycle::unschedule();
     flush_rewrite_rules( false );
 } );

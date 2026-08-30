@@ -1,20 +1,64 @@
 /* ==========================================================================
-   Kitgenix Document Manager/kitgenix-document-manager
+   Kitgenix Document Manager – admin app styles
+   Builds on top of the shared assets/css/kitgenix-admin-ui.css component
+   library. Only plugin-specific layout and states live here.
    ========================================================================== */
+
 /* ----------------------------------------------------------------
-  Page app wrapper
+  Page app wrapper & generic layout helpers
 ----------------------------------------------------------------- */
 #kitgenix-document-manager-admin-app {
   width: 100%;
   max-width: 1240px;
 }
 
+.kitgenix-grid {
+  display: grid;
+  gap: 24px;
+  align-items: start;
+}
+
+.kitgenix-grid--2 {
+  grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
+}
+
+@media screen and (max-width: 960px) {
+  .kitgenix-grid--2 {
+    grid-template-columns: 1fr;
+  }
+}
+
 .kitgenix-documents-sidebar {
   display: grid;
   gap: 16px;
   align-content: start;
+  min-width: 0;
 }
 
+/* Small muted caption text used throughout (also created dynamically by
+   admin.js, e.g. version-list empty state and bulk-upload file list). */
+.kitgenix-muted {
+  color: var(--kitgenix-text-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* Inline code / placeholder token, e.g. the {slug} hint under the slug field. */
+.kitgenix-code {
+  display: inline-block;
+  padding: 1px 6px;
+  margin-left: 2px;
+  border-radius: var(--kitgenix-radius-sm);
+  background: var(--kitgenix-bg-light);
+  border: 1px solid var(--kitgenix-border-subtle);
+  font-family: monospace;
+  font-size: 11px;
+  color: var(--kitgenix-text-color);
+}
+
+/* ----------------------------------------------------------------
+  Batch upload dropzone
+----------------------------------------------------------------- */
 .kitgenix-document-manager-bulk-upload-card .button {
   margin-bottom: 0;
 }
@@ -29,8 +73,8 @@
   margin-bottom: 14px;
   padding: 18px;
   border: 2px dashed color-mix(in srgb, var(--kitgenix-brand) 28%, var(--kitgenix-border-color));
-  border-radius: var(--kitgenix-radius-md);
-  background: color-mix(in srgb, var(--kitgenix-brand) 4%, var(--kitgenix-surface));
+  border-radius: var(--kitgenix-radius-lg);
+  background: color-mix(in srgb, var(--kitgenix-brand) 4%, var(--kitgenix-bg-light));
   text-align: center;
   cursor: pointer;
   transition: border-color var(--kitgenix-transition), background var(--kitgenix-transition), transform var(--kitgenix-transition);
@@ -39,7 +83,7 @@
 .kitgenix-document-manager-dropzone:hover,
 .kitgenix-document-manager-dropzone:focus {
   border-color: color-mix(in srgb, var(--kitgenix-brand) 55%, var(--kitgenix-border-color));
-  background: color-mix(in srgb, var(--kitgenix-brand) 8%, var(--kitgenix-surface));
+  background: color-mix(in srgb, var(--kitgenix-brand) 8%, var(--kitgenix-bg-light));
   transform: translateY(-1px);
 }
 
@@ -50,21 +94,21 @@
 
 .kitgenix-document-manager-dropzone.is-dragover {
   border-color: var(--kitgenix-brand);
-  background: color-mix(in srgb, var(--kitgenix-brand) 12%, var(--kitgenix-surface));
+  background: var(--kitgenix-brand-light);
 }
 
 .kitgenix-document-manager-selected-files {
   margin: 0 0 16px;
   padding: 12px 14px;
   border: 1px solid var(--kitgenix-border-color);
-  border-radius: var(--kitgenix-radius-sm);
-  background: color-mix(in srgb, var(--kitgenix-brand) 2%, var(--kitgenix-surface));
+  border-radius: var(--kitgenix-radius-md);
+  background: var(--kitgenix-bg-light);
 }
 
 .kitgenix-document-manager-selected-files__summary {
   margin: 0 0 8px;
   font-weight: 600;
-  color: var(--kitgenix-heading);
+  color: var(--kitgenix-text-color);
 }
 
 .kitgenix-document-manager-selected-files__list {
@@ -76,6 +120,9 @@
   margin-top: 4px;
 }
 
+/* ----------------------------------------------------------------
+  Documents bulk-action toolbar
+----------------------------------------------------------------- */
 .kitgenix-document-manager-bulk-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -85,13 +132,6 @@
   margin-bottom: 14px;
 }
 
-.kitgenix-document-manager-bulk-toolbar__controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-
 .kitgenix-document-manager-bulk-toolbar__controls select,
 .kitgenix-document-manager-bulk-toolbar__controls .button {
   margin: 0;
@@ -99,189 +139,6 @@
 
 .kitgenix-document-manager-bulk-toolbar__status {
   min-height: 24px;
-}
-
-/* ----------------------------------------------------------------
-  Documents table
------------------------------------------------------------------ */
-.kitgenix-table-wrap .kitgenix-table {
-  width: 100%;
-}
-
-.kitgenix-document-manager-table .kitgenix-col-select {
-  width: 44px;
-  text-align: center;
-}
-
-.kitgenix-document-manager-table td.kitgenix-col-select {
-  vertical-align: middle;
-}
-
-.kitgenix-links-table thead th {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--kitgenix-text-muted);
-}
-
-.kitgenix-links-table tbody tr:hover {
-  background: color-mix(in srgb, var(--kitgenix-brand) 5%, var(--kitgenix-surface));
-}
-
-.kitgenix-document-manager-table .kitgenix-col-actions {
-  white-space: normal;
-}
-
-/* Stable link display */
-.kitgenix-stable-link {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-/* ----------------------------------------------------------------
-  Versions list
------------------------------------------------------------------ */
-.kitgenix-versions-list {
-  display: grid;
-  gap: 10px;
-}
-
-.kitgenix-versions-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  border: 1px solid var(--kitgenix-border-color);
-  border-radius: var(--kitgenix-radius-sm);
-  padding: 12px 16px;
-  background: var(--kitgenix-surface);
-  transition: background var(--kitgenix-transition), border-color var(--kitgenix-transition);
-}
-
-.kitgenix-versions-item:hover {
-  background: color-mix(in srgb, var(--kitgenix-brand) 4%, var(--kitgenix-surface));
-  border-color: color-mix(in srgb, var(--kitgenix-brand) 25%, var(--kitgenix-border-color));
-}
-
-.kitgenix-versions-item__meta {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.kitgenix-versions-item__date {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--kitgenix-heading);
-}
-
-.kitgenix-versions-item__info {
-  font-size: 12px;
-  color: var(--kitgenix-text-muted);
-}
-
-.kitgenix-versions-item__actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-/* ----------------------------------------------------------------
-  Links toolbar (shared with Affiliate plugin, minor tweaks)
------------------------------------------------------------------ */
-.kitgenix-links-toolbar {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-
-/* ----------------------------------------------------------------
-  Category badge in table
------------------------------------------------------------------ */
-.kitgenix-doc-category {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 10px;
-  border-radius: var(--kitgenix-radius-pill);
-  font-size: 11px;
-  font-weight: 700;
-  background: var(--kitgenix-brand-dim);
-  color: var(--kitgenix-brand);
-  border: 1px solid color-mix(in srgb, var(--kitgenix-brand) 22%, transparent);
-}
-
-/* ----------------------------------------------------------------
-  Visibility pills
------------------------------------------------------------------ */
-.kitgenix-visibility-public {
-  background: var(--kitgenix-success-bg);
-  color: var(--kitgenix-success);
-  border-color: var(--kitgenix-success-border);
-}
-
-.kitgenix-visibility-private {
-  background: var(--kitgenix-warning-bg);
-  color: var(--kitgenix-warning);
-  border-color: var(--kitgenix-warning-border);
-}
-
-/* ----------------------------------------------------------------
-  Support tab (scoped legacy selectors)
------------------------------------------------------------------ */
-.kitgenix-document-manager-support-page .kitgenix-document-manager-support-heading {
-  font-size: 1.2em;
-  font-weight: 800;
-  margin: 0 0 8px;
-  color: var(--kitgenix-heading);
-  letter-spacing: -0.01em;
-}
-
-.kitgenix-document-manager-support-page .kitgenix-document-manager-support-intro {
-  margin-top: 0;
-  margin-bottom: 18px;
-  color: var(--kitgenix-text-muted);
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.kitgenix-document-manager-support-page .kitgenix-document-manager-support-subheading {
-  margin: 20px 0 8px;
-  font-size: 11.5px;
-  font-weight: 700;
-  color: var(--kitgenix-heading);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.kitgenix-document-manager-support-page .ul-disc {
-  margin: 8px 0 14px 1.2em;
-  list-style: disc;
-}
-
-.kitgenix-document-manager-support-page .kitgenix-document-manager-support-actions {
-  margin-top: 18px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.kitgenix-document-manager-support-page .kitgenix-document-manager-support-actions .button {
-  margin: 0;
-}
-
-/* ----------------------------------------------------------------
-  Accessibility
------------------------------------------------------------------ */
-@media (prefers-reduced-motion: reduce) {
-  #kitgenix-document-manager-admin-app * {
-    transition: none !important;
-  }
 }
 
 @media (max-width: 900px) {
@@ -302,72 +159,167 @@
 }
 
 /* ----------------------------------------------------------------
-  WORDPRESS 7.0 ADMIN EXTENSIONS
-  Preserve plugin layouts while aligning controls with WP admin styles.
+  Documents / categories / versions tables
 ----------------------------------------------------------------- */
-
-:root {
-  --kitgenix-brand: #4f2a9a;
-  --kitgenix-brand-hover: #42237f;
-  --kitgenix-brand-active: #351b66;
-  --kitgenix-focus-ring: 0 0 0 1px #4f2a9a;
+.kitgenix-document-manager-table .kitgenix-col-select {
+  width: 44px;
+  text-align: center;
 }
 
-.kitgenix-admin-app :is(input[type="text"], input[type="search"], input[type="number"], input[type="url"], input[type="email"], input[type="password"], input[type="date"], select, textarea),
-.kitgenix-analytics-wrap :is(input[type="text"], input[type="search"], input[type="number"], input[type="url"], input[type="email"], input[type="password"], input[type="date"], select, textarea),
-.wrap.kitgenix-pdf-invoicing-for-woocommerce-pdf-settings :is(input[type="text"], input[type="search"], input[type="number"], input[type="url"], input[type="email"], input[type="password"], input[type="date"], select, textarea) {
-  border-color: #8c8f94;
-  border-radius: 4px;
-  color: #2c3338;
-  background: #ffffff;
+.kitgenix-document-manager-table td.kitgenix-col-select {
+  vertical-align: middle;
 }
 
-.kitgenix-admin-app :is(input[type="text"], input[type="search"], input[type="number"], input[type="url"], input[type="email"], input[type="password"], input[type="date"], select, textarea):focus,
-.kitgenix-admin-app :is(input[type="text"], input[type="search"], input[type="number"], input[type="url"], input[type="email"], input[type="password"], input[type="date"], select, textarea):focus-visible,
-.kitgenix-analytics-wrap :is(input[type="text"], input[type="search"], input[type="number"], input[type="url"], input[type="email"], input[type="password"], input[type="date"], select, textarea):focus,
-.kitgenix-analytics-wrap :is(input[type="text"], input[type="search"], input[type="number"], input[type="url"], input[type="email"], input[type="password"], input[type="date"], select, textarea):focus-visible,
-.wrap.kitgenix-pdf-invoicing-for-woocommerce-pdf-settings :is(input[type="text"], input[type="search"], input[type="number"], input[type="url"], input[type="email"], input[type="password"], input[type="date"], select, textarea):focus,
-.wrap.kitgenix-pdf-invoicing-for-woocommerce-pdf-settings :is(input[type="text"], input[type="search"], input[type="number"], input[type="url"], input[type="email"], input[type="password"], input[type="date"], select, textarea):focus-visible {
-  border-color: #4f2a9a;
-  box-shadow: 0 0 0 1px #4f2a9a;
-  outline: 2px solid transparent;
+.kitgenix-document-manager-table .kitgenix-col-actions {
+  white-space: normal;
 }
 
-.kitgenix-admin-app :is(.button.button-primary, button.button-primary, a.button.button-primary, input.button.button-primary),
-.kitgenix-analytics-wrap :is(.button.button-primary, button.button-primary, a.button.button-primary, input.button.button-primary),
-.wrap.kitgenix-pdf-invoicing-for-woocommerce-pdf-settings :is(.button.button-primary, button.button-primary, a.button.button-primary, input.button.button-primary) {
-  border-color: #4f2a9a;
-  background: #4f2a9a;
-  color: #ffffff;
-  text-shadow: none;
+/* Row action links laid out as a wrapping, left-aligned inline group –
+   used instead of .kitgenix-table-actions (which is icon-button, right
+   aligned) because these rows use plain text action links. */
+.kitgenix-table-actions-wrap {
+  flex-wrap: wrap;
+  justify-content: flex-start !important;
+  gap: 4px 14px;
 }
 
-.kitgenix-admin-app :is(.button.button-primary, button.button-primary, a.button.button-primary, input.button.button-primary):hover,
-.kitgenix-admin-app :is(.button.button-primary, button.button-primary, a.button.button-primary, input.button.button-primary):focus-visible,
-.kitgenix-analytics-wrap :is(.button.button-primary, button.button-primary, a.button.button-primary, input.button.button-primary):hover,
-.kitgenix-analytics-wrap :is(.button.button-primary, button.button-primary, a.button.button-primary, input.button.button-primary):focus-visible,
-.wrap.kitgenix-pdf-invoicing-for-woocommerce-pdf-settings :is(.button.button-primary, button.button-primary, a.button.button-primary, input.button.button-primary):hover,
-.wrap.kitgenix-pdf-invoicing-for-woocommerce-pdf-settings :is(.button.button-primary, button.button-primary, a.button.button-primary, input.button.button-primary):focus-visible {
-  border-color: #42237f;
-  background: #42237f;
-  color: #ffffff;
+.kitgenix-table-actions-wrap a {
+  white-space: nowrap;
 }
 
-.kitgenix-admin-app :is(.button.button-secondary, button.button-secondary, a.button.button-secondary),
-.kitgenix-analytics-wrap :is(.button.button-secondary, button.button-secondary, a.button.button-secondary),
-.wrap.kitgenix-pdf-invoicing-for-woocommerce-pdf-settings :is(.button.button-secondary, button.button-secondary, a.button.button-secondary) {
-  border-color: #4f2a9a;
-  color: #4f2a9a;
-  background: #f6f7f7;
+/* ----------------------------------------------------------------
+  Versions list (inside the document edit modal)
+----------------------------------------------------------------- */
+.kitgenix-versions-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.kitgenix-admin-app :is(.button.button-secondary, button.button-secondary, a.button.button-secondary):hover,
-.kitgenix-admin-app :is(.button.button-secondary, button.button-secondary, a.button.button-secondary):focus-visible,
-.kitgenix-analytics-wrap :is(.button.button-secondary, button.button-secondary, a.button.button-secondary):hover,
-.kitgenix-analytics-wrap :is(.button.button-secondary, button.button-secondary, a.button.button-secondary):focus-visible,
-.wrap.kitgenix-pdf-invoicing-for-woocommerce-pdf-settings :is(.button.button-secondary, button.button-secondary, a.button.button-secondary):hover,
-.wrap.kitgenix-pdf-invoicing-for-woocommerce-pdf-settings :is(.button.button-secondary, button.button-secondary, a.button.button-secondary):focus-visible {
-  border-color: #42237f;
-  color: #42237f;
-  background: #f0f0f1;
+.kitgenix-versions-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--kitgenix-border-color);
+  border-radius: var(--kitgenix-radius-md);
+  padding: 12px 16px;
+  background: var(--kitgenix-bg-white);
+  transition: background var(--kitgenix-transition), border-color var(--kitgenix-transition);
+}
+
+.kitgenix-versions-item:hover {
+  background: var(--kitgenix-bg-light);
+  border-color: color-mix(in srgb, var(--kitgenix-brand) 25%, var(--kitgenix-border-color));
+}
+
+.kitgenix-versions-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--kitgenix-text-color);
+}
+
+.kitgenix-versions-sub {
+  margin-top: 2px;
+}
+
+.kitgenix-versions-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ----------------------------------------------------------------
+  Category badge / visibility pills (kept for any legacy output)
+----------------------------------------------------------------- */
+.kitgenix-doc-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--kitgenix-radius-pill);
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--kitgenix-brand-light);
+  color: var(--kitgenix-brand);
+  border: 1px solid color-mix(in srgb, var(--kitgenix-brand) 22%, transparent);
+}
+
+.kitgenix-visibility-public {
+  background: var(--kitgenix-success-light);
+  color: var(--kitgenix-success);
+  border-color: var(--kitgenix-success-border);
+}
+
+.kitgenix-visibility-private {
+  background: var(--kitgenix-warning-light);
+  color: var(--kitgenix-warning);
+  border-color: var(--kitgenix-warning-border);
+}
+
+/* ----------------------------------------------------------------
+  Modal footer modifier: primary action on the right, a destructive
+  "Delete" link pinned to the left – see the document/category modals.
+----------------------------------------------------------------- */
+.kitgenix-modal-footer-split {
+  justify-content: space-between;
+}
+
+/* ----------------------------------------------------------------
+  Frontend tab: button color grid & shortcode builder results
+----------------------------------------------------------------- */
+.kitgenix-document-manager-color-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 480px;
+}
+
+.kitgenix-document-manager-sc-results {
+  width: 100%;
+  max-height: 220px;
+  overflow: auto;
+  padding: 10px 12px;
+  border: 1px solid var(--kitgenix-border-color);
+  border-radius: var(--kitgenix-radius-md);
+  background: var(--kitgenix-bg-light);
+}
+
+/* ----------------------------------------------------------------
+  Accessibility
+----------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  #kitgenix-document-manager-admin-app * {
+    transition: none !important;
+  }
+}
+
+/* ----------------------------------------------------------------
+  Document-edit screen metabox (post.php?post_type=kitgenix_document)
+  Lives outside .kitgenix-admin-app – lightweight token-based polish only.
+----------------------------------------------------------------- */
+.kitgenix-metabox .kitgenix-field-row {
+  margin: 0 0 10px;
+}
+
+.kitgenix-metabox .description {
+  color: var(--kitgenix-text-muted, #64748B);
+  font-size: 12px;
+}
+
+.kitgenix-document-manager-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.kitgenix-document-manager-stable-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
 }

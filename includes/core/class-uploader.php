@@ -128,20 +128,23 @@ final class Uploader {
      *
      * @param int   $document_id Document CPT ID.
      * @param array $file        One entry from $_FILES.
-     * @return int Attachment ID.
+     * @return int|\WP_Error Attachment ID on success, WP_Error with a specific code on failure.
      */
     // phpcs:ignore WordPress.Security.NonceVerification.Missing -- callers must verify nonces and capabilities before invoking this helper.
-    public static function upload_and_attach( int $document_id, array $file ): int {
+    public static function upload_and_attach( int $document_id, array $file ): int|\WP_Error {
         if ( ! Capabilities::user_can_manage() ) {
-            return 0;
+            Event_Log::record( 'document-upload', 'error', __( 'Upload blocked: the current user does not have permission to manage documents.', 'kitgenix-document-manager' ), 'no_capability' );
+            return new \WP_Error( 'no_capability', __( 'You do not have permission to upload documents.', 'kitgenix-document-manager' ) );
         }
 
         if ( empty( $file['tmp_name'] ) || ! is_string( $file['tmp_name'] ) || ! is_uploaded_file( $file['tmp_name'] ) ) {
-            return 0;
+            Event_Log::record( 'document-upload', 'error', __( 'Upload failed: no temporary upload file was received from the server.', 'kitgenix-document-manager' ), 'no_tmp_file' );
+            return new \WP_Error( 'no_tmp_file', __( 'No uploaded file was received. Please try again.', 'kitgenix-document-manager' ) );
         }
 
         if ( ! kitgenix_document_manager_ensure_upload_dir() ) {
-            return 0;
+            Event_Log::record( 'document-upload', 'error', __( 'Upload failed: the plugin uploads folder could not be created or is not writable.', 'kitgenix-document-manager' ), 'dir_not_writable' );
+            return new \WP_Error( 'dir_not_writable', __( 'The uploads folder is not writable. Contact your host or administrator.', 'kitgenix-document-manager' ) );
         }
 
         if ( ! function_exists( 'wp_handle_upload' ) ) {
@@ -178,7 +181,23 @@ final class Uploader {
         }
 
         if ( ! is_array( $upload ) || ! empty( $upload['error'] ) ) {
-            return 0;
+            $handler_message = is_array( $upload ) ? sanitize_text_field( (string) ( $upload['error'] ?? '' ) ) : '';
+            Event_Log::record(
+                'document-upload',
+                'error',
+                $handler_message !== ''
+                    ? sprintf(
+                        /* translators: %s: error message returned by wp_handle_upload() */
+                        __( 'Upload failed: %s', 'kitgenix-document-manager' ),
+                        $handler_message
+                    )
+                    : __( 'Upload failed: WordPress could not process the uploaded file.', 'kitgenix-document-manager' ),
+                'upload_handler_error'
+            );
+            return new \WP_Error(
+                'upload_handler_error',
+                $handler_message !== '' ? $handler_message : __( 'Upload failed. Please check the file and try again.', 'kitgenix-document-manager' )
+            );
         }
 
         $filepath = (string) ( $upload['file'] ?? '' );
@@ -186,7 +205,8 @@ final class Uploader {
         $filetype = (string) ( $upload['type'] ?? '' );
 
         if ( $filepath === '' || ! file_exists( $filepath ) ) {
-            return 0;
+            Event_Log::record( 'document-upload', 'error', __( 'Upload failed: the uploaded file could not be located on disk after processing.', 'kitgenix-document-manager' ), 'missing_filepath' );
+            return new \WP_Error( 'missing_filepath', __( 'The uploaded file could not be found after processing. Please try again.', 'kitgenix-document-manager' ) );
         }
 
         // Extra validation: ensure file extension is allowed.
@@ -200,7 +220,8 @@ final class Uploader {
                 // phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink -- fallback when wp_delete_file is unavailable.
                 @unlink( $filepath );
             }
-            return 0;
+            Event_Log::record( 'document-upload', 'error', __( 'Upload rejected: the file extension is not on the allowed list.', 'kitgenix-document-manager' ), 'disallowed_extension' );
+            return new \WP_Error( 'disallowed_extension', __( 'This file type is not allowed. Check Settings → Allowed file types.', 'kitgenix-document-manager' ) );
         }
 
         $attachment = [
@@ -213,7 +234,8 @@ final class Uploader {
 
         $attach_id = (int) wp_insert_attachment( $attachment, $filepath, $document_id );
         if ( $attach_id <= 0 ) {
-            return 0;
+            Event_Log::record( 'document-upload', 'error', __( 'Upload failed: WordPress could not create the attachment record for the uploaded file.', 'kitgenix-document-manager' ), 'db_insert_failed' );
+            return new \WP_Error( 'db_insert_failed', __( 'The file was uploaded but could not be saved to the media library. Please try again.', 'kitgenix-document-manager' ) );
         }
 
         if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
@@ -239,14 +261,18 @@ final class Uploader {
     /**
      * Replace the current file (optionally keeping version history).
      *
-     * @return int New attachment ID.
+     * @return int|\WP_Error New attachment ID on success, WP_Error on failure.
      */
     // phpcs:ignore WordPress.Security.NonceVerification.Missing -- callers must verify nonces and capabilities before invoking this helper.
-    public static function replace_file( int $document_id, array $file, bool $keep_history, bool $delete_old_when_not_kept ): int {
+    public static function replace_file( int $document_id, array $file, bool $keep_history, bool $delete_old_when_not_kept, string $version_label = '', string $version_note = '' ): int|\WP_Error {
         $old_current = self::get_current_attachment_id( $document_id );
         $new_id = self::upload_and_attach( $document_id, $file );
-        if ( $new_id <= 0 ) {
-            return 0;
+        if ( is_wp_error( $new_id ) ) {
+            return $new_id;
+        }
+
+        if ( $version_label !== '' || $version_note !== '' ) {
+            kitgenix_document_manager_set_version_meta( $document_id, $new_id, $version_label, $version_note );
         }
 
         $versions = kitgenix_document_manager_get_versions( $document_id );

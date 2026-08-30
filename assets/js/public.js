@@ -1,1 +1,1 @@
-/* Kitgenix Document Manager — Public UI */
+/* Kitgenix Document Manager – Public UI */

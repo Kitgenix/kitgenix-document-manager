@@ -1,4 +1,4 @@
-/* Kitgenix Document Manager — Admin UI */
+/* Kitgenix Document Manager – Admin UI */
 
 (function () {
   'use strict';
@@ -204,7 +204,7 @@
 
         var title = document.createElement('div');
         title.className = 'kitgenix-versions-name';
-        title.textContent = escapeText(v.fileName || ('Attachment #' + (v.id || '')));
+        title.textContent = escapeText(v.fileName || ('Attachment #' + (v.id || ''))) + (v.label ? (' – ' + escapeText(v.label)) : '');
         meta.appendChild(title);
 
         var sub = document.createElement('div');
@@ -212,9 +212,17 @@
         var parts = [];
         if (v.size) parts.push(v.size);
         if (v.replacedAt) parts.push(v.replacedAt);
+        if (v.uploadedBy) parts.push(escapeText(v.uploadedBy));
         if (v.isCurrent) parts.push('Current');
         sub.textContent = parts.join(' • ');
         meta.appendChild(sub);
+
+        if (v.note) {
+          var noteEl = document.createElement('div');
+          noteEl.className = 'kitgenix-muted kitgenix-versions-sub';
+          noteEl.textContent = escapeText(v.note);
+          meta.appendChild(noteEl);
+        }
 
         var actions = document.createElement('div');
         actions.className = 'kitgenix-versions-actions';
@@ -316,6 +324,21 @@
       if (shareExpiresEl) shareExpiresEl.value = data.shareExpires || '';
       setShareControls(data.shareUrl || '');
 
+      var shareMaxUsesEl = form.querySelector('input[name="share_max_uses"]');
+      if (shareMaxUsesEl) shareMaxUsesEl.value = data.shareMaxUses || '0';
+
+      var shareRevokeEl = document.getElementById('kitgenix_dm_modal_share_revoke');
+      if (shareRevokeEl) {
+        shareRevokeEl.setAttribute('href', data.shareRevokeUrl || '#');
+        shareRevokeEl.style.display = data.shareRevokeUrl ? '' : 'none';
+      }
+
+      var shareRegenerateEl = document.getElementById('kitgenix_dm_modal_share_regenerate');
+      if (shareRegenerateEl) {
+        shareRegenerateEl.setAttribute('href', data.shareRegenerateUrl || '#');
+        shareRegenerateEl.style.display = data.shareRegenerateUrl ? '' : 'none';
+      }
+
       var availableFromEl = form.querySelector('input[name="available_from"]');
       if (availableFromEl) availableFromEl.value = data.availableFrom || '';
 
@@ -360,6 +383,7 @@
         deleteAllBtn.style.display = data.deleteAllUrl ? '' : 'none';
       }
 
+      modal.hidden = false;
       modal.setAttribute('aria-hidden', 'false');
       modal.classList.add('is-open');
 
@@ -368,6 +392,7 @@
     }
 
     function closeModal() {
+      modal.hidden = true;
       modal.setAttribute('aria-hidden', 'true');
       modal.classList.remove('is-open');
     }
@@ -398,6 +423,9 @@
           accessUserIds: edit.getAttribute('data-access-user-ids') || '',
           shareExpires: edit.getAttribute('data-share-expires') || '',
           shareUrl: edit.getAttribute('data-share-url') || '',
+          shareMaxUses: edit.getAttribute('data-share-max-uses') || '0',
+          shareRevokeUrl: edit.getAttribute('data-share-revoke-url') || '',
+          shareRegenerateUrl: edit.getAttribute('data-share-regenerate-url') || '',
           availableFrom: edit.getAttribute('data-available-from') || '',
           archiveAt: edit.getAttribute('data-archive-at') || '',
           expiresAt: edit.getAttribute('data-expires-at') || '',
@@ -427,7 +455,7 @@
     });
 
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && modal.classList.contains('is-open')) {
+      if (e.key === 'Escape' && !modal.hidden) {
         closeModal();
       }
     });
@@ -579,6 +607,7 @@
       var parentEl = form.querySelector('select[name="parent_id"]');
       if (parentEl) parentEl.value = data.parentId || '0';
 
+      modal.hidden = false;
       modal.setAttribute('aria-hidden', 'false');
       modal.classList.add('is-open');
 
@@ -587,6 +616,7 @@
     }
 
     function close() {
+      modal.hidden = true;
       modal.setAttribute('aria-hidden', 'true');
       modal.classList.remove('is-open');
     }
@@ -597,7 +627,7 @@
       if (!t) return;
 
       var closeBtn = t.closest('[data-kitgenix-modal-close]');
-      if (closeBtn && modal.classList.contains('is-open')) {
+      if (closeBtn && !modal.hidden) {
         e.preventDefault();
         close();
         return;
@@ -616,7 +646,7 @@
     });
 
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && modal.classList.contains('is-open')) {
+      if (e.key === 'Escape' && !modal.hidden) {
         close();
       }
     });
@@ -920,6 +950,61 @@
     buildShortcode();
   }
 
+  function bindAccessPresets() {
+    document.addEventListener('change', function (e) {
+      var select = e.target;
+      if (!select || select.getAttribute('data-kitgenix-access-preset') !== '1') return;
+
+      var preset = select.value || '';
+      if (!preset) return;
+
+      var form = select.closest ? select.closest('form') : null;
+      if (!form) return;
+
+      var visibilityEl = form.querySelector('select[name="visibility"]');
+      var rolesEl = form.querySelector('select[name="access_roles[]"]');
+      var capabilityEl = form.querySelector('input[name="access_capability"]');
+      var userIdsEl = form.querySelector('input[name="access_user_ids"]');
+
+      function clearRoles() {
+        if (!rolesEl) return;
+        for (var i = 0; i < rolesEl.options.length; i++) {
+          rolesEl.options[i].selected = false;
+        }
+      }
+
+      function selectRole(roleValue) {
+        if (!rolesEl) return;
+        for (var i = 0; i < rolesEl.options.length; i++) {
+          if (rolesEl.options[i].value === roleValue) {
+            rolesEl.options[i].selected = true;
+          }
+        }
+      }
+
+      if (preset === 'public') {
+        if (visibilityEl) visibilityEl.value = 'public';
+        clearRoles();
+        if (capabilityEl) capabilityEl.value = '';
+        if (userIdsEl) userIdsEl.value = '';
+      } else if (preset === 'logged_in') {
+        if (visibilityEl) visibilityEl.value = 'private';
+        clearRoles();
+        if (capabilityEl) capabilityEl.value = '';
+        if (userIdsEl) userIdsEl.value = '';
+      } else if (preset === 'admins_only') {
+        if (visibilityEl) visibilityEl.value = 'restricted';
+        clearRoles();
+        selectRole('administrator');
+        if (capabilityEl) capabilityEl.value = '';
+        if (userIdsEl) userIdsEl.value = '';
+      }
+
+      // Reset back to the placeholder so re-choosing the same preset still fires "change".
+      select.value = '';
+    });
+  }
+
   function bindDocsSearch() {
     var input = document.getElementById('kitgenix-document-manager-docs-search');
     var table = document.getElementById('kitgenix-document-manager-docs-table');
@@ -928,6 +1013,7 @@
     var clearBtn = document.getElementById('kitgenix-document-manager-docs-clear');
     var countEl = document.getElementById('kitgenix-document-manager-docs-count');
     var emptyEl = document.getElementById('kitgenix-document-manager-docs-no-results');
+    var filterSelects = Array.prototype.slice.call(document.querySelectorAll('[data-kitgenix-docs-filter]'));
 
     var tbody = table.querySelector('tbody');
     if (!tbody) return;
@@ -940,25 +1026,45 @@
       return (s || '').toString().trim().toLowerCase();
     }
 
+    function activeFilters() {
+      var active = {};
+      for (var i = 0; i < filterSelects.length; i++) {
+        var sel = filterSelects[i];
+        var key = sel.getAttribute('data-kitgenix-docs-filter');
+        var val = (sel.value || '').toString();
+        if (key && val) active[key] = val;
+      }
+      return active;
+    }
+
+    function rowMatchesFilters(row, filters) {
+      if (filters.status && row.getAttribute('data-kitgenix-status') !== filters.status) return false;
+      if (filters.visibility && row.getAttribute('data-kitgenix-visibility') !== filters.visibility) return false;
+      if (filters.filetype && row.getAttribute('data-kitgenix-filetype') !== filters.filetype) return false;
+      return true;
+    }
+
     function update() {
       var q = norm(input.value);
+      var filters = activeFilters();
+      var hasFilters = !!(filters.status || filters.visibility || filters.filetype);
       var all = rows();
       var visible = 0;
 
       for (var i = 0; i < all.length; i++) {
         var r = all[i];
         var blob = norm(r.getAttribute('data-kitgenix-search') || r.textContent || '');
-        var show = !q || (blob.indexOf(q) !== -1);
+        var show = (!q || (blob.indexOf(q) !== -1)) && rowMatchesFilters(r, filters);
         r.style.display = show ? '' : 'none';
         if (show) visible++;
       }
 
       if (clearBtn) {
-        clearBtn.style.display = q ? '' : 'none';
+        clearBtn.style.display = (q || hasFilters) ? '' : 'none';
       }
 
       if (countEl) {
-        if (!q) {
+        if (!q && !hasFilters) {
           countEl.textContent = '';
         } else {
           countEl.textContent = visible + ' / ' + all.length;
@@ -979,9 +1085,16 @@
       }
     });
 
+    for (var s = 0; s < filterSelects.length; s++) {
+      filterSelects[s].addEventListener('change', update);
+    }
+
     if (clearBtn) {
       clearBtn.addEventListener('click', function () {
         input.value = '';
+        for (var s2 = 0; s2 < filterSelects.length; s2++) {
+          filterSelects[s2].value = '';
+        }
         update();
         input.focus();
       });
@@ -1105,6 +1218,16 @@
       }
 
       if (action === 'delete' && !window.confirm('Move the selected documents to the Trash?')) {
+        e.preventDefault();
+        return;
+      }
+
+      if (action === 'visibility_public' && !window.confirm('Set the selected documents to Public? This may include documents that are currently Private or Restricted, and will remove those access controls.')) {
+        e.preventDefault();
+        return;
+      }
+
+      if (action === 'archive_now' && !window.confirm('Archive the selected documents now? They will stop appearing on the frontend and via stable links until un-archived.')) {
         e.preventDefault();
       }
     });
@@ -1250,6 +1373,7 @@
     document.addEventListener('click', onCopyClick);
     bindTabs();
     bindAutoSlug();
+    bindAccessPresets();
     bindDocsSearch();
     bindDocumentBulkTools();
     bindBulkUploadDropzone();

@@ -43,7 +43,7 @@ final class Admin_Columns {
             $slug = get_post_field( 'post_name', $post_id );
             $slug = is_string( $slug ) ? $slug : '';
             if ( $slug === '' ) {
-                echo '—';
+                echo '–';
                 return;
             }
             $url = kitgenix_document_manager_stable_url( $slug );
@@ -58,12 +58,12 @@ final class Admin_Columns {
         if ( $column === 'kitgenix_dm_version' ) {
             $aid = (int) get_post_meta( $post_id, '_kitgenix_document_manager_current_attachment_id', true );
             if ( $aid <= 0 ) {
-                echo '—';
+                echo '–';
                 return;
             }
             $a = get_post( $aid );
             if ( ! ( $a instanceof \WP_Post ) ) {
-                echo '—';
+                echo '–';
                 return;
             }
 
@@ -75,7 +75,7 @@ final class Admin_Columns {
         if ( $column === 'kitgenix_dm_file' ) {
             $aid = (int) get_post_meta( $post_id, '_kitgenix_document_manager_current_attachment_id', true );
             if ( $aid <= 0 ) {
-                echo '—';
+                echo '–';
                 return;
             }
 
@@ -102,7 +102,7 @@ final class Admin_Columns {
                 $out[] = $size_str;
             }
 
-            echo esc_html( $name ? $name : '—' );
+            echo esc_html( $name ? $name : '–' );
             if ( $out ) {
                 echo '<div class="description">' . esc_html( implode( ' • ', $out ) ) . '</div>';
             }

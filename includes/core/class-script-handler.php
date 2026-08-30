@@ -54,7 +54,7 @@ final class Script_Handler {
             wp_enqueue_style(
                 'kitgenix-document-manager-admin',
                 defined( 'KITGENIX_DOCUMENT_MANAGER_FILE' ) ? plugins_url( 'assets/css/admin.css', KITGENIX_DOCUMENT_MANAGER_FILE ) : '',
-                [ 'kitgenix-admin-ui' ],
+                [ 'kitgenix-document-manager-admin-ui' ],
                 $css_ver
             );
 
@@ -67,7 +67,7 @@ final class Script_Handler {
             );
         }
 
-        wp_enqueue_style( 'kitgenix-admin-ui' );
+        wp_enqueue_style( 'kitgenix-document-manager-admin-ui' );
 
         // Shared admin JS provides copy-to-clipboard and modal wiring; safe on editor screens.
         wp_enqueue_script(

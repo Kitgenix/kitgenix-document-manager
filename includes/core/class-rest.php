@@ -34,13 +34,13 @@ final class Rest {
 
         $post = get_page_by_path( $slug, OBJECT, CPT::POST_TYPE );
         if ( ! ( $post instanceof \WP_Post ) || $post->post_status !== 'publish' ) {
-            return new \WP_REST_Response( [ 'code' => 'not_found' ], 404 );
+            return self::response_no_store( [ 'code' => 'not_found' ], 404 );
         }
 
         $document_id = (int) $post->ID;
         $attachment_id = (int) get_post_meta( $document_id, '_kitgenix_document_manager_current_attachment_id', true );
         if ( $attachment_id <= 0 ) {
-            return new \WP_REST_Response( [ 'code' => 'not_found' ], 404 );
+            return self::response_no_store( [ 'code' => 'not_found' ], 404 );
         }
 
         $access = kitgenix_document_manager_evaluate_document_access(
@@ -51,7 +51,7 @@ final class Rest {
         );
 
         if ( empty( $access['allowed'] ) ) {
-            return new \WP_REST_Response(
+            return self::response_no_store(
                 [
                     'code'   => (string) ( $access['reason'] ?? 'forbidden' ),
                     'status' => (string) ( $access['schedule']['status'] ?? '' ),
@@ -60,16 +60,45 @@ final class Rest {
             );
         }
 
-        return new \WP_REST_Response(
-            [
-                'slug'            => $slug,
-                'title'           => get_the_title( $post ),
-                'updated'         => get_post_modified_time( 'c', true, $post ),
-                'visibility'      => (string) ( $access['visibility'] ?? kitgenix_document_manager_get_document_visibility( $document_id ) ),
-                'schedule_status' => (string) ( $access['schedule']['status'] ?? 'active' ),
-                'stable_url'      => kitgenix_document_manager_stable_url( $slug ),
-            ],
-            200
-        );
+        $visibility = (string) ( $access['visibility'] ?? kitgenix_document_manager_get_document_visibility( $document_id ) );
+        $lifecycle  = kitgenix_document_manager_get_document_lifecycle_state( $document_id );
+
+        $data = [
+            'slug'            => $slug,
+            'title'           => get_the_title( $post ),
+            'updated'         => get_post_modified_time( 'c', true, $post ),
+            'visibility'      => $visibility,
+            'schedule_status' => (string) ( $access['schedule']['status'] ?? 'active' ),
+            'lifecycle_state' => (string) ( $lifecycle['state'] ?? '' ),
+            'stable_url'      => kitgenix_document_manager_stable_url( $slug ),
+        ];
+
+        /**
+         * Filters the REST metadata payload for `GET /kitgenix-document-manager/v1/doc/{slug}`.
+         * Runs only after the built-in access check has already allowed the request.
+         *
+         * @param array            $data    Response payload.
+         * @param \WP_Post         $post    Document post.
+         * @param array            $access  Access-decision array.
+         * @param \WP_REST_Request $request The current request.
+         */
+        $data = apply_filters( 'kitgenix_document_manager_rest_document_response', $data, $post, $access, $request );
+
+        $response = new \WP_REST_Response( $data, 200 );
+
+        // Public documents may be safely cached by intermediaries; anything
+        // reached only via a signed link or granular access rule must not be.
+        if ( $visibility !== 'public' || ! empty( $access['is_signed_request'] ) ) {
+            $response->header( 'Cache-Control', 'private, no-store, max-age=0' );
+        }
+
+        return $response;
+    }
+
+    private static function response_no_store( array $data, int $status ): \WP_REST_Response {
+        $response = new \WP_REST_Response( $data, $status );
+        $response->header( 'Cache-Control', 'private, no-store, max-age=0' );
+
+        return $response;
     }
 }
