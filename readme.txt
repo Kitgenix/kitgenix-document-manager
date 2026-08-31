@@ -1,398 +1,277 @@
 === Kitgenix Document Manager ===
 Contributors: kitgenix
 Donate link: https://www.paypal.com/donate/?hosted_button_id=KALF36K6JJ9B2
-Tags: document management, file manager, pdf, downloads, access control, file sharing
+Tags: document management, document library, secure downloads, file sharing, access control
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
 Stable tag: 2.0.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
-Plugin URI: https://wordpress.org/plugins/kitgenix-document-manager/
-Author: Kitgenix
-Author URI: https://kitgenix.com/
-Author Plugin URI: https://kitgenix.com/plugins/kitgenix-document-manager
-Documentation URI: https://kitgenix.com/plugins/kitgenix-document-manager/documentation
-Support URI: https://wordpress.org/support/plugin/kitgenix-document-manager/
-Author Support URI: https://kitgenix.com/plugins/kitgenix-document-manager/support
-Feature Request URI: https://kitgenix.com/plugins/kitgenix-document-manager/feature-request
 
-Document management with stable, unbreakable links, granular access control, scheduling, and usage analytics.
+Manage WordPress documents with stable links, access control, signed sharing, versions, scheduling and local analytics.
 
 == Description ==
 
-Kitgenix Document Manager gives you a dedicated library for PDFs, Office files, and other documents, separate from the standard Media Library, with a permanent link for every file.
+**Kitgenix Document Manager** is a WordPress document management and document library plugin for publishing, protecting, replacing, sharing and tracking downloadable files. It adds a managed document layer around WordPress attachments so a document can keep one stable URL while the physical file behind it changes over time.
 
-Upload a document and it gets a stable URL such as:
+This is useful for policy documents, product manuals, technical downloads, specification sheets, price lists, application forms, certificates, reports, staff resources, membership files and other documents that need more control than a raw Media Library URL.
+
+A published document uses a stable route similar to:
 
 `/kitgenix-document-manager/{slug}/`
 
-Replace the underlying file later – a new policy version, an updated price list, a corrected report – and the link never changes. Anyone who already has the URL, bookmarked it, or received it in an email keeps working. There are no broken links and nothing to re-share.
+Replace the current attachment later and the document route can remain the same, so old links in pages, emails, QR codes, bookmarks and external documentation do not need to be replaced.
 
-This is built for site owners, membership sites, HR and compliance teams, and any WordPress site that needs to publish or restrict downloadable files without relying on plain Media Library links that break the moment a file is replaced.
+Built by [Kitgenix](https://kitgenix.com/).
 
-= Key Features =
+= Document Management Features =
 
-* **Stable links** – replace a file at any time without changing its public URL
-* **Visibility controls** – set each document to Public, Private, or Restricted
-* **Granular access rules** – restrict a document by WordPress role, capability, or specific user IDs
-* **Signed share links** – generate an expiring URL so people without a WordPress account can access a document, with an optional maximum-use count, one-click revoke, and a secret-rotation "Regenerate" action
-* **Lifecycle scheduling** – set go-live, archive, and expiry dates so a document publishes and retires automatically, enforced on the stable link, shortcodes, and REST endpoint alike
-* **Usage analytics** – per-document view/download counts, signed-share activity, last-access timestamps, and 30-day rollups
-* **Version history (optional)** – keep, restore, or delete older versions of a file, with an optional label/note and a record of who replaced it and when
-* **Document categories** – group documents into a hierarchical taxonomy for easier organisation
-* **Batch upload** – drag and drop multiple files at once to create document entries with shared visibility, category, and versioning defaults
-* **Bulk actions** – update visibility, recategorise, archive, clear a schedule, or move several documents to Trash in one step
-* **Media Library integration** – attach an existing Media Library file to a document instead of uploading a new one
-* **REST API** – fetch a document's stable metadata (title, visibility, lifecycle state, URL) by slug
-* **Site Health integration** – a built-in check confirms the plugin's uploads directory exists and is writable
+* Stable managed URLs independent of the current physical attachment URL.
+* Public, Private and Restricted visibility modes.
+* Access rules using WordPress roles, capabilities and specific user IDs.
+* Time-limited signed share links for people without a WordPress account.
+* Optional maximum-use limits on signed links.
+* Revoke and signing-secret regeneration controls.
+* Available-from, archive and expiry scheduling.
+* Optional document version history.
+* Restore or delete historical versions.
+* Hierarchical document categories.
+* Batch upload and bulk administration tools.
+* Existing Media Library attachment selection.
+* Frontend document-card and text-link shortcodes.
+* Admin Shortcode Builder for locating documents and generating markup.
+* Local aggregate document views/download analytics.
+* REST metadata access subject to document permissions.
+* Single HTTP byte-range support for compatible downloads/media seeking.
+* Conditional ETag/Last-Modified responses for eligible public files.
+* Attachment access guards for protected managed files.
+* Site Health test for the dedicated document upload directory.
+* Settings/category portability without exporting protected files or share secrets.
+* Capped local event log for operational diagnostics.
 
-= Managing Documents =
+= Stable WordPress Document Links =
 
-Everything happens under **Kitgenix → Document Manager**, in a tabbed admin screen: Documents, Categories, Versions, Settings, Frontend, Log, and Support.
+The plugin separates the logical document from the current file. Pages and users link to the document's stable endpoint; the document record then decides which attachment is current and whether the requester is allowed to receive it.
 
-* The Documents table shows every document with its stable link, current version, file type/size, and visibility, plus search and Status/Visibility/File Type filters
-* A unified lifecycle badge (Draft, Unavailable, Scheduled, Live, Restricted, Archived, or Expired) shows each document's effective state at a glance
-* A quick edit modal lets you update visibility, access rules, scheduling, and versioning without leaving the table
-* "Copy shortcode" and "Copy link" actions let editors grab the right embed code or URL without opening another screen
-* An access-preset control (Public / Logged-in Users / Administrators Only) quickly fills in the role, capability, and user-ID fields, which can still be adjusted before saving
-* Settings and categories (not documents, files, or analytics) can be exported to and imported from a JSON file, for moving configuration between sites
-* The Log tab records admin actions and delivery events in a searchable, paginated table, with a one-click "Clear log" action
+This model is particularly useful for frequently revised documents. A "Product Manual" or "Terms and Conditions" link can remain consistent while administrators replace the actual PDF or Office file as revisions are released.
 
-= Displaying Documents on Your Site =
+= Public, Private and Restricted Documents =
 
-Two shortcodes are available for embedding documents in posts, pages, or widgets:
+Each document has a visibility mode and can also carry more granular rules. Access can be evaluated using WordPress roles, a required capability, explicitly allowed user IDs or a valid signed share link.
 
-* `[kitgenix_document_manager_link slug="my-doc"]` – a simple text link to the stable URL. Add `label="Download"` to set custom link text; otherwise the document title is used.
-* `[kitgenix_document_manager_document slug="my-doc"]` – a document card with a preview thumbnail, title, optional description, file type/size, and a button linking to the stable URL. Use `slugs="doc-a,doc-b,doc-c"` instead of `slug` to render several cards together.
+The same access decision is applied across the managed delivery endpoint and the plugin's own output paths. The code also includes guards designed to prevent protected managed attachments being casually exposed through Media REST responses or normal attachment permalinks to a visitor who does not have document access.
 
-Card attributes include `button_label`, `button_style` (outline or solid), `image_size`, `meta_align`, `button_align`, `show_description`, `new_tab`, `show_type`, and `show_size` – all of which also have site-wide defaults under the **Frontend** settings tab, along with button colour controls. A built-in Shortcode Builder with document search generates the correct shortcode for you.
+For unauthenticated protected requests, the configured behaviour can send the visitor to login or return a forbidden response according to the site setting.
 
-Documents a visitor cannot access render nothing on the front end, so a private or restricted document's existence is never disclosed to the public. Editors who can manage documents see a small inline note instead, explaining why.
+= Signed File Sharing =
 
-Note: inline viewing works best for PDFs, images, and plain text. Office documents (DOCX, XLSX, etc.) typically download rather than open in the browser, because most browsers cannot render them natively.
+A signed URL can grant temporary access to a protected document without creating a WordPress account for the recipient. Signed links can have an expiry time and an optional maximum-use count.
 
-= Access Control & Security =
+Administrators can revoke a share link or regenerate the document's signing secret. The signature is bound to document-specific values including the current attachment and document slug, so changing the underlying file affects the validity context rather than creating a permanent backdoor to every future version.
 
-* Visibility is set per document as Public, Private, or Restricted, with optional role, capability, and specific-user restrictions layered on top
-* Private-document behaviour is configurable: redirect visitors to log in, or return a 403 response
-* Signed share links grant temporary access to a document without requiring a WordPress account. Each link can have an optional maximum-use count and can be revoked or regenerated (invalidating all previously issued links) at any time
-* The signed-link signature is checked using a constant-time comparison (`hash_equals()`) and separately validates expiry and use-count before granting access
-* A document's underlying file cannot be reached through WordPress's own REST media endpoints (`/wp/v2/media/{id}`) or its attachment permalink when the document is Private, Restricted, scheduled, archived, or expired – this applies whether the file was uploaded through the plugin or selected from the existing Media Library
-* Private, Restricted, and signed-share responses are never cached (`Cache-Control: private, no-store`); Public documents use conditional caching (ETag/Last-Modified, including 304 responses) so browsers and CDNs can revalidate efficiently
-* HTTP Range requests are supported for resuming downloads and seeking within large PDFs or media files
-* The plugin's dedicated uploads subfolder receives an `.htaccess` (Apache), `web.config` (IIS), and empty `index.php` to block direct web requests; files can also stream in fixed-size chunks from disk rather than being loaded entirely into memory
-* Uploads are restricted to a configurable, audited allow-list of file extensions (PDF, Word, Excel, PowerPoint, and plain text by default); dangerous formats such as SVG and PHP are not permitted
+= Lifecycle Scheduling =
 
-= Developer Features =
+Documents can have an **Available from** time, an **Archive at** time and an **Expires at** time. These fields allow a file to become available automatically or to stop normal access without an administrator having to remember the exact campaign/compliance deadline.
 
-* REST endpoint: `GET /wp-json/kitgenix-document-manager/v1/doc/{slug}` returns slug, title, last-updated time, visibility, schedule status, lifecycle state, and stable URL, applying the same access rules as the stable link
-* Filter `kitgenix_document_manager_user_has_document_access` – plug in a custom access system alongside the built-in role/capability/user-ID checks
-* Filter `kitgenix_document_manager_share_link_url` – adjust a signed share URL after it has been generated and signed
-* Filter `kitgenix_document_manager_rest_document_response` – extend the REST metadata payload
-* Action `kitgenix_document_manager_document_served` – fires after a document has been streamed to a requester, with the event type (view/download) and full access-decision data
-* Action `kitgenix_document_manager_lifecycle_status_changed` – fires when a document's lifecycle state changes (e.g. scheduled → live), including via an hourly background check for documents nobody has visited
-* Full internal reference (option keys, post meta, admin-post actions, hooks, and asset handles) is documented below for developers extending the plugin
+The lifecycle layer can represent states such as Draft, Scheduled, Live, Restricted, Archived or Expired. An hourly WordPress cron event checks scheduled documents so state transitions can be observed even when the document is not being requested continuously.
 
-= Compatibility =
+= Version History =
 
-* Works alongside WooCommerce: Shop Managers are automatically granted document-management access in addition to Administrators
-* Adds a shared "Kitgenix" top-level admin menu used by other Kitgenix plugins, so all installed Kitgenix plugins are reachable from one place
+When versioning is enabled, replacing a document can retain the superseded attachment as a historical version. Version records can include a label or note, and authorised users can restore an older file or delete old versions.
+
+Stores/sites that do not want historical copies can disable version retention and configure replacement behaviour accordingly.
+
+= Document Library Organisation =
+
+Documents are stored in a private plugin post type and can be grouped with the plugin's hierarchical document-category taxonomy. The plugin's own admin screens provide search and filters for document status, visibility and file type, together with batch upload and bulk actions.
+
+Bulk operations can change visibility, assign or clear categories, archive documents, clear lifecycle schedules or move selected documents to the trash depending on the action chosen.
+
+= Frontend Shortcodes =
+
+A lightweight link can be rendered with:
+
+`[kitgenix_document_manager_link slug="my-document"]`
+
+A card can be rendered with:
+
+`[kitgenix_document_manager_document slug="my-document"]`
+
+The card shortcode can also display several comma-separated document slugs and supports presentation attributes for button labels/styles, image size, alignment, target behaviour and the visibility of file metadata/description.
+
+Protected documents are not revealed by the shortcode to visitors who fail the document's access rules.
+
+= Local Document Analytics =
+
+The plugin records aggregate counts for views/downloads, signed-link usage and recent daily activity in WordPress metadata. It also retains the most recent access timestamp/type for administrative reporting.
+
+The analytics implementation does not create visitor profiles and does not intentionally store visitor IP addresses, user agents, referrers or tracking cookies. Older daily buckets are pruned while cumulative totals remain available.
+
+= File Delivery, Range Requests and Caching =
+
+Managed files are served through WordPress after access checks. The endpoint supports single byte-range requests, which can help resumable downloads and seeking in compatible browser-displayed content.
+
+Eligible public responses can use ETag and Last-Modified revalidation. Protected responses are handled with private/no-store style cache controls so a shared intermediary is not encouraged to cache restricted content.
+
+= REST and Site Health =
+
+A plugin REST route can return permitted document metadata by slug. Permission/access checks still apply; it is not intended as an anonymous route for enumerating protected documents.
+
+The Site Health integration checks the dedicated Document Manager uploads directory and can flag directory/writability problems that would prevent file management from working correctly.
+
+= Settings Portability =
+
+Administrators can export/import plugin configuration and document-category structure as JSON. This portability workflow deliberately does not package the document files themselves, signed-link secrets or analytics history.
+
+= Typical Uses =
+
+* Product manuals and technical PDFs that receive frequent revisions.
+* Policy, compliance and governance documents with expiry dates.
+* Member-only or staff-only downloads.
+* Customer documents restricted by WordPress account/role.
+* Temporary secure sharing with an external recipient.
+* Download libraries organised by document category.
+* Stable links for QR codes, printed brochures and long-lived email templates.
 
 == Installation ==
 
-1. Upload the plugin folder to `/wp-content/plugins/`, or install it through **Plugins → Add New** in your WordPress admin.
-2. Activate the plugin through the **Plugins** menu.
-3. Go to **Kitgenix → Document Manager**.
-4. Add your first document and upload a file. Configure default file types, visibility, and serving mode under the **Settings** tab as needed.
-5. If stable links return a 404, visit **Settings → Permalinks** and click **Save Changes** to flush rewrite rules.
-
-== External Services ==
-
-This plugin includes a shared "Kitgenix hub" component in wp-admin which may fetch publicly available plugin metadata from WordPress.org using the WordPress core `plugins_api()` function (WordPress.org Plugins API).
-
-* When it runs: only in wp-admin (Kitgenix plugin admin pages)
-* Data sent: plugin slug(s) (no personal data)
-* Data received: publicly available plugin information (e.g. active installs, ratings)
-* Caching: responses are cached locally using transients for ~1 day:
-	* `kitgenix_hub_wporg_active_installs_v1`
-	* `kitgenix_hub_wporg_ratings_v1`
-	* `kitgenix_hub_wporg_media_v1`
-
-WordPress.org's Plugins API is governed by the WordPress.org Terms of Service (https://wordpress.org/about/terms/) and Privacy Policy (https://wordpress.org/about/privacy/). No document data, file contents, or visitor information is ever sent as part of these requests.
-
-== Developer Notes (Internal Reference) ==
-
-This section documents internal identifiers used by the plugin (useful for developers, debugging, and advanced users).
-
-= Options (Settings) =
-
-* Option name: `kitgenix_document_manager_settings` (constant: `KITGENIX_DOCUMENT_MANAGER_OPTION_NAME`)
-* Keys (defaults):
-	* `allowed_extensions`: `["pdf","doc","docx","xls","xlsx","ppt","pptx","txt"]` (stored as an array; comma-separated strings are accepted and normalized)
-	* `default_visibility`: `public` (public|private|restricted)
-	* `serving_mode`: `attachment` (attachment|inline)
-	* `keep_version_history`: `true`
-	* `delete_old_versions`: `false`
-	* `private_behavior`: `login` (login|403)
-	* `delete_data_on_uninstall`: `false`
-	* `card_button_label`: `"View"`
-	* `card_button_style`: `"outline"` (outline|solid)
-	* `card_open_new_tab`: `false`
-	* `card_show_file_type`: `true`
-	* `card_show_file_size`: `true`
-	* `card_show_description`: `false`
-	* `card_image_size`: `96` (px)
-	* `card_meta_alignment`: `"justify"` (justify|left|center|right)
-	* `card_button_alignment`: `"center"` (justify|left|center|right)
-	* `card_button_text_color` / `card_button_bg_color` / `card_button_border_color` / `card_button_hover_text_color` / `card_button_hover_bg_color` / `card_button_hover_border_color`: `""` (hex or blank)
-
-= Data Model =
-
-* Custom Post Type: `kitgenix_dm_doc`
-* Taxonomy (categories): `kitgenix_dm_cat`
-* Capability: `manage_kitgenix_document_manager_documents` (assigned to Administrators and Shop Managers on activation)
-
-= Post Meta =
-
-* `_kitgenix_document_manager_current_attachment_id` (current attachment ID)
-* `_kitgenix_document_manager_description` (optional document description shown on cards)
-* `_kitgenix_document_manager_visibility` (`public`|`private`|`restricted`)
-* `_kitgenix_document_manager_access_roles` (array of allowed WordPress roles)
-* `_kitgenix_document_manager_access_capability` (optional required WordPress capability)
-* `_kitgenix_document_manager_access_user_ids` (array of allowed user IDs)
-* `_kitgenix_document_manager_share_expires_gmt` (signed share expiry in GMT)
-* `_kitgenix_document_manager_share_secret` (per-document signing secret)
-* `_kitgenix_document_manager_share_max_uses` (optional maximum signed-link uses; 0/absent = unlimited)
-* `_kitgenix_document_manager_share_use_count` (times the current signed link has been used to actually access the file)
-* `_kitgenix_document_manager_available_from_gmt` (go-live time in GMT)
-* `_kitgenix_document_manager_archive_at_gmt` (archive time in GMT)
-* `_kitgenix_document_manager_expires_at_gmt` (expiry time in GMT)
-* `_kitgenix_document_manager_versioning_enabled` (0|1)
-* `_kitgenix_document_manager_versions` (array of attachment IDs – unchanged format for backward compatibility)
-* `_kitgenix_document_manager_version_meta` (array keyed by attachment ID => `['label' => string, 'note' => string]`; additive, never required)
-* `_kitgenix_document_manager_last_lifecycle_state` (internal; last-observed lifecycle state slug, used only to detect transitions for the lifecycle hook)
-* `_kitgenix_document_manager_analytics` (view/download counters, signed-share counters, and daily buckets)
-
-= Stable Link Endpoint =
-
-* Base path: `/kitgenix-document-manager/{slug}/`
-* Query var: `kitgenix_document_manager_slug`
-* Signed-share query args: `kitgenix_dm_share`, `kitgenix_dm_expires`, `kitgenix_dm_sig`
-
-= REST API =
-
-* `GET /wp-json/kitgenix-document-manager/v1/doc/{slug}`
-	* Returns: `slug`, `title`, `updated` (ISO 8601), `visibility`, `schedule_status`, `lifecycle_state`, `stable_url`
-	* Protected, scheduled, archived, or expired documents return the same access state the stable link endpoint enforces
-	* Responses for anything other than a fully public document send `Cache-Control: private, no-store` so intermediary caches/CDNs never retain them
-
-= Shortcodes =
-
-* `[kitgenix_document_manager_link slug="my-doc" label="Download"]`
-	* If `label` is omitted, the document title is used.
-	* Protected, scheduled, archived, or expired documents render nothing when the current visitor cannot access them.
-
-* `[kitgenix_document_manager_document slug="my-doc" button_label="View"]`
-	* Renders a small preview (thumbnail/icon), the document title, file type, file size, and a "View" button.
-	* Protected, scheduled, archived, or expired documents render nothing when the current visitor cannot access them.
-	* Optional attributes: `button_style="outline"|"solid"`, `image_size="96"`, `meta_align="justify"|"left"|"center"|"right"`, `button_align="justify"|"left"|"center"|"right"`, `show_description="0"|"1"`, `new_tab="0"|"1"`, `show_type="0"|"1"`, `show_size="0"|"1"`.
-	* To render multiple documents inline, use `slugs` instead of `slug`, e.g. `[kitgenix_document_manager_document slugs="doc-a,doc-b,doc-c"]`.
-
-= Filters & Actions (Developer API) =
-
-* `kitgenix_document_manager_user_has_document_access` (filter: `$allowed, $post_id, $context`)
-	* Allows custom access systems to grant or deny a logged-in user after the built-in role/capability/user-ID checks run. `$allowed` is `null` by default; returning a boolean overrides the decision. `$context` includes `visibility`, `allowed_roles`, `required_capability`, `allowed_user_ids`, `surface`, and `schedule`.
-* `kitgenix_document_manager_share_link_url` (filter: `$url, $post_id, $expires_timestamp`)
-	* Runs whenever a signed share URL is generated. Fired only after the URL is fully built and signed – a filter cannot be used to grant access to a document it wouldn't otherwise have.
-* `kitgenix_document_manager_document_served` (action: `$document_id, $attachment_id, $event_type, $access`)
-	* Fires immediately after a document's file has been streamed to the requester (or prepared for a HEAD request). `$event_type` is `view` or `download`; `$access` is the full access-decision array.
-* `kitgenix_document_manager_rest_document_response` (filter: `$data, $post, $access, $request`)
-	* Extend the payload returned by `GET /kitgenix-document-manager/v1/doc/{slug}`. Runs only after the built-in access check has already allowed the request.
-* `kitgenix_document_manager_lifecycle_status_changed` (action: `$document_id, $old_state, $new_state`)
-	* Fires when a document's effective lifecycle state changes (e.g. `scheduled` -> `live`, `live` -> `archived`/`expired`). Detected both when a document is visited and via an hourly background check, so it also fires for documents nobody has viewed since the transition.
-
-= Admin Actions (admin-post.php) =
-
-The Document Manager screen uses admin-post actions, including:
-
-* `kitgenix_document_manager_document_save`
-	* Nonce field: `kitgenix_document_manager_document_nonce`
-	* Nonce action: `kitgenix_document_manager_document_save`
-* `kitgenix_document_manager_document_delete` (nonce query parameter `nonce`)
-* `kitgenix_document_manager_documents_bulk_action`
-	* Nonce field: `kitgenix_document_manager_bulk_action_nonce`
-	* Nonce action: `kitgenix_document_manager_documents_bulk_action`
-* `kitgenix_document_manager_documents_bulk_upload`
-	* Nonce field: `kitgenix_document_manager_bulk_upload_nonce`
-	* Nonce action: `kitgenix_document_manager_documents_bulk_upload`
-* `kitgenix_document_manager_version_restore` (nonce query parameter `nonce`)
-* `kitgenix_document_manager_version_delete` (nonce query parameter `nonce`)
-* `kitgenix_document_manager_versions_delete_all` (nonce query parameter `nonce`)
-* `kitgenix_document_manager_category_save`
-	* Nonce field: `kitgenix_document_manager_category_nonce`
-	* Nonce action: `kitgenix_document_manager_category_save`
-* `kitgenix_document_manager_category_delete` (nonce query parameter `nonce`)
-* `kitgenix_document_manager_share_revoke` (nonce query parameter `nonce`) – clears the current signed share link
-* `kitgenix_document_manager_share_regenerate` (nonce query parameter `nonce`) – rotates the signing secret, invalidating all previously issued links
-* `kitgenix_document_manager_export_settings` – downloads a JSON export of settings + categories (requires `manage_options`)
-* `kitgenix_document_manager_import_settings` – imports settings + categories from a JSON export (requires `manage_options`)
-* `kitgenix_document_manager_clear_event_log` – clears all entries from the Log tab (requires `manage_options`)
-
-WordPress action hook names for the above screen actions:
-
-* `admin_post_kitgenix_document_manager_document_save`
-* `admin_post_kitgenix_document_manager_document_delete`
-* `admin_post_kitgenix_document_manager_documents_bulk_action`
-* `admin_post_kitgenix_document_manager_documents_bulk_upload`
-* `admin_post_kitgenix_document_manager_version_restore`
-* `admin_post_kitgenix_document_manager_version_delete`
-* `admin_post_kitgenix_document_manager_versions_delete_all`
-* `admin_post_kitgenix_document_manager_category_save`
-* `admin_post_kitgenix_document_manager_category_delete`
-* `admin_post_kitgenix_document_manager_share_revoke`
-* `admin_post_kitgenix_document_manager_share_regenerate`
-* `admin_post_kitgenix_document_manager_export_settings`
-* `admin_post_kitgenix_document_manager_import_settings`
-* `admin_post_kitgenix_document_manager_clear_event_log`
-
-Admin AJAX:
-
-* `wp_ajax_kitgenix_dm_search_docs` (used by the Shortcode Builder autocomplete)
-
-The (hidden) CPT edit screen metabox uses:
-
-* `kitgenix_document_manager_upload_initial` (nonce field `kitgenix_document_manager_file_nonce`)
-* `kitgenix_document_manager_replace_file` (nonce field `kitgenix_document_manager_file_nonce`)
-* Visibility/versioning meta save nonce:
-	* Nonce field: `kitgenix_document_manager_meta_nonce`
-	* Nonce action: `kitgenix_document_manager_save_meta`
-
-= Hooks, Filters & Assets (Internal) =
-
-This list is intended as a comprehensive map of WordPress integration points used by the plugin.
-
-* `plugins_loaded` (bootstrap init)
-* `init` (register CPT/taxonomy; add rewrite rules)
-* Filter: `query_vars` (adds query var `kitgenix_document_manager_slug`)
-* `template_redirect` (serves stable link responses)
-* `rest_api_init` (registers REST route)
-* `admin_menu` (registers Kitgenix menu + Document Manager submenu)
-* `admin_head` (outputs Kitgenix admin menu icon CSS)
-* `admin_init` (registers Settings API option)
-* `admin_enqueue_scripts` (enqueues Kitgenix hub CSS; enqueues Document Manager admin assets)
-* `add_meta_boxes` (adds the CPT file/visibility metaboxes)
-* `save_post` (saves visibility, versioning, access, signed-share, and scheduling meta)
-* `admin_post_kitgenix_document_manager_upload_initial` (metabox upload)
-* `admin_post_kitgenix_document_manager_replace_file` (metabox replace)
-* `admin_notices` (metabox success/error notices via `kitgenix_dm_notice`)
-* Filter: `manage_kitgenix_dm_doc_posts_columns` (adds list table columns)
-* `manage_kitgenix_dm_doc_posts_custom_column` (renders list table columns)
-* Filter: `post_row_actions` (adds "Replace File" row action)
-* Filter: `site_status_tests` (registers Site Health test)
-* Filter: `rest_request_before_callbacks` (blocks single-item REST media requests for inaccessible documents)
-* Filter: `rest_attachment_query` (excludes inaccessible attachments from REST media collection queries)
-* Filter: `rest_prepare_attachment` (strips file-revealing fields from inaccessible attachment REST responses)
-* `template_redirect` (blocks the classic attachment permalink for inaccessible documents)
-* Shortcodes: `kitgenix_document_manager_link`, `kitgenix_document_manager_document`
-
-Other admin UI identifiers:
-- Admin list-table column key: `kitgenix_dm_actions`
-- Version restore notice query arg: `kitgenix_version_restored=1`
-
-Admin asset handles (wp-admin):
-
-* Styles:
-	* `kitgenix-hub` (Kitgenix hub page)
-	* `kitgenix-admin-ui` (shared Kitgenix admin UI)
-	* `kitgenix-document-manager-admin` (Document Manager settings screen)
-* Scripts:
-	* `kitgenix-admin-tabs` (shared Kitgenix tabs UI)
-	* `kitgenix-document-manager-admin` (Document Manager admin JS)
-
-= Site Health (Internal) =
-
-* Registers Site Health test ID: `kitgenix_document_manager_uploads` (checks uploads directory exists and is writable)
-
-= Notes (Internal) =
-
-* Uninstall deletes a legacy transient `kitgenix_document_manager_site_health` for backwards compatibility, even though v1 does not set it.
-* WP-Cron hook `kitgenix_document_manager_lifecycle_check` runs hourly (scheduled on activation/upgrade, cleared on deactivation and uninstall) to detect lifecycle-state transitions for documents that have a go-live/archive/expiry date set, bounded to 500 documents per run.
-* Option `kitgenix_document_manager_db_version` tracks the installed data-shape version for the idempotent upgrade routine; it is safe to run on every request (a single cached option read) and only performs work when behind the current version.
-* The plugin's dedicated uploads subfolder (`wp-content/uploads/kitgenix-document-manager/`) receives an `.htaccess`, `web.config`, and empty `index.php` the first time it is created/verified, blocking direct web requests to that folder on Apache/IIS. This does not affect normal serving, which reads the file from local disk rather than requesting it over HTTP. Nginx hosts should add an equivalent `location` block manually.
+1. Install and activate **Kitgenix Document Manager** through WordPress, or upload the plugin folder to `/wp-content/plugins/`.
+2. Go to **Kitgenix → Document Manager**.
+3. Add a document and upload a permitted file, or select an existing Media Library attachment.
+4. Choose its visibility and, if required, configure role/capability/user access, signed sharing, version history, and lifecycle dates.
+5. Copy the stable document link or use one of the included shortcodes on a page or post.
+6. If a stable document URL returns 404 after activation or migration, visit **Settings → Permalinks** and save the page once to refresh rewrite rules.
 
 == Frequently Asked Questions ==
 
-= Where are uploaded documents stored? =
+= Does replacing a document change its public link? =
 
-Files uploaded through Document Manager are stored in `wp-content/uploads/kitgenix-document-manager/`. If you attach an existing Media Library file to a document instead, the plugin uses that attachment's existing location.
+No. The stable document URL points to the document record rather than directly to a particular attachment. Replacing the current file keeps the same stable URL.
 
-= What file types can I upload? =
+= Can I restrict documents to logged-in users? =
 
-By default: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, and TXT. The allowed list is configurable under Settings, but is always checked against the plugin's built-in extension-to-MIME allow-list, so unsupported or unsafe formats (such as SVG or PHP files) cannot be added.
+Yes. Set the document to a protected visibility mode. You can also narrow access using roles, a required capability, or specific user IDs.
 
-= Why does my file download instead of opening in the browser? =
+= Can I share a protected file with somebody who does not have an account? =
 
-Browsers can only display certain file types inline – PDFs, images, and plain text. For formats browsers can't render, such as DOCX or XLSX, the file downloads even when Serving mode is set to Inline.
+Yes. Generate a signed share link with an expiry date. You can optionally set a maximum-use count, revoke the link, or regenerate the signing secret to invalidate previously issued links.
 
-= Can I restrict a document to specific users or roles? =
+= Can documents automatically go live or expire? =
 
-Yes. Each document supports access rules by role, capability, or specific WordPress user IDs, in addition to its Public/Private/Restricted visibility setting.
+Yes. Each document can have an available-from time, archive time, and expiry time. Access checks enforce those lifecycle dates across the stable URL, shortcode output, and plugin REST endpoint.
 
-= Can I share a document with someone who doesn't have a WordPress account? =
+= Can I keep old versions when I replace a file? =
 
-Yes. Generate a signed share link – an expiring URL that grants temporary access without requiring a login. You can set an optional maximum-use count, and revoke or regenerate the link at any time.
+Yes. Version history can retain old attachments. Saved versions can have optional labels/notes and can later be restored or deleted.
 
-= Can I schedule when a document becomes available or stops being available? =
+= Can I display several documents together? =
 
-Yes. Each document can have a go-live date, an archive date, and an expiry date. These are enforced on the stable link, shortcodes, and REST endpoint, and an hourly background check also catches transitions for documents nobody has visited.
+Yes. Use the `slugs` attribute on `[kitgenix_document_manager_document]` with a comma-separated list of document slugs.
 
-= Can I restore a previous version of a document? =
+= Does the plugin support PDFs? =
 
-Yes, if **Keep version history** is enabled for that document. Use the quick edit modal to restore or delete older versions from the Versions panel.
+Yes. PDF is allowed by default and can be served inline when the global serving mode is set to inline. Browser support determines whether a compatible file is displayed or downloaded.
 
-= Can I upload multiple documents at once? =
+= Is WooCommerce required? =
 
-Yes. The Documents tab includes a Batch Upload panel for drag-and-drop multi-file ingest, plus bulk actions for changing visibility, category, or lifecycle status across several documents at once.
+No. The plugin works without WooCommerce. If WooCommerce is active, the Shop Manager role is granted the Document Manager capability on activation so store managers can be permitted to manage documents.
 
-= Does this plugin have a REST API? =
+= Are existing Media Library files fully hidden from their original URL? =
 
-Yes. `GET /wp-json/kitgenix-document-manager/v1/doc/{slug}` returns a document's metadata and respects the same access rules as the stable link.
+Not necessarily. Existing Media Library attachments remain in their original location. The plugin guards their WordPress REST-media exposure and attachment permalink when access is denied, but an already-known raw uploads URL may still be directly reachable depending on server configuration. See **Security and File Protection** above.
 
-= Does the plugin track document views and downloads? =
+= What is included in settings export/import? =
 
-Yes. Built-in analytics record per-document view/download counts, signed-share activity, last-access timestamps, and 30-day rollups.
+Plugin settings and document categories. Documents, uploaded files, analytics, and signed-link secrets are intentionally excluded.
 
-= Does this plugin send any data to external services? =
+= What happens when I uninstall the plugin? =
 
-The plugin itself does not send document data anywhere. A shared "Kitgenix hub" screen in wp-admin may request publicly available plugin metadata (such as active install counts and ratings) from the WordPress.org Plugins API, which involves sending only a plugin slug – never document content or visitor data. See "External Services" above for details.
+Plugin settings/log data are removed during uninstall. Document posts and managed attachments are retained by default. If **Delete data on uninstall** is enabled before uninstalling, the plugin also deletes its document records and associated current/version attachments.
 
-= What happens to my documents if I uninstall the plugin? =
+== REST API and Developer Hooks ==
 
-By default, uninstalling removes the plugin's settings and activity log but leaves your documents, files, and analytics untouched. If you enable **Delete all plugin data on uninstall** under Settings, uninstalling also permanently deletes all documents and their uploaded files.
+The plugin registers this read-only metadata route:
+
+`GET /wp-json/kitgenix-document-manager/v1/doc/{slug}`
+
+For an allowed request, the response includes the document slug, title, modified date, visibility, schedule status, lifecycle state, and stable URL. The endpoint applies Document Manager access checks before returning metadata.
+
+Available extension points include:
+
+* `kitgenix_document_manager_user_has_document_access` – provide a custom access decision after the built-in role/capability/user checks have been evaluated.
+* `kitgenix_document_manager_share_link_url` – filter a generated signed share URL.
+* `kitgenix_document_manager_rest_document_response` – customise an allowed REST metadata response.
+* `kitgenix_document_manager_document_served` – runs after a document file has been successfully streamed.
+* `kitgenix_document_manager_lifecycle_status_changed` – runs when the effective lifecycle state changes after an existing state has previously been observed.
+
+Internal storage uses the private `kitgenix_dm_doc` post type and the hierarchical `kitgenix_dm_cat` taxonomy. These implementation details are provided for developers and should not be treated as permanent public URLs.
+
+== External Services ==
+
+The plugin contains two external-service/network behaviours that can occur in wp-admin. They are not used to upload or process your document files.
+
+= WordPress.org Plugin API =
+
+The shared Kitgenix Hub can request public information about Kitgenix plugins from WordPress.org through WordPress core's `plugins_api()` function. These requests are used for information shown in the Kitgenix admin interface and are cached locally with WordPress transients.
+
+Data sent: plugin slugs required to look up public plugin-directory information. The plugin does not intentionally include document contents, document access rules, Document Manager analytics, or visitor information in these API lookups.
+
+Service: https://wordpress.org/plugins/
+Terms: https://wordpress.org/about/terms/
+Privacy: https://wordpress.org/about/privacy/
+
+= Google Fonts =
+
+The Kitgenix admin interface stylesheet imports the Inter and Manrope font families from Google Fonts. When an authorised administrator opens a plugin screen that loads this stylesheet, the administrator's browser may contact `fonts.googleapis.com` and `fonts.gstatic.com` to retrieve font CSS/files. As with ordinary web requests, Google may receive technical request information such as the requesting IP address and browser/network headers.
+
+Google Fonts is used for admin-interface typography only; it is not required for document delivery and the plugin does not send document files to Google Fonts.
+
+Service: https://fonts.google.com/
+Google Fonts privacy information: https://developers.google.com/fonts/faq/privacy
+Google Terms: https://policies.google.com/terms
+Google Privacy Policy: https://policies.google.com/privacy
+
+The plugin includes links to Kitgenix documentation, support, community/social pages, WordPress.org reviews/support, and PayPal donation pages. Those destinations are only contacted if an administrator chooses to open the relevant link; Document Manager does not automatically upload document data to Kitgenix.
+
+== Privacy ==
+
+Kitgenix Document Manager stores its operational data in the site's own WordPress database and uploads directory.
+
+Document analytics are aggregate counters and timestamps. The plugin's analytics implementation does not store visitor IP addresses, user agents, referrers, cookies, or a per-visitor identifier.
+
+The local activity log stores a timestamp, event context, outcome, a plain-English note, and an optional event code. It is capped at 100 entries. The log does not intentionally store IP addresses or document file contents.
+
+Document access configuration may contain WordPress role names, a required capability, and WordPress user IDs selected by the site administrator. Version attribution uses the WordPress attachment author's existing account/display-name information.
+
+Signed sharing stores a per-document secret, expiry information, maximum-use setting, and use counter in WordPress post meta. The signing secret is not included in the settings/category export.
+
+See **External Services** for the network connections made by the admin interface.
 
 == Screenshots ==
 
-1. The Documents table, showing each document's stable link, current version, file details, visibility, and lifecycle status, with search and Status/Visibility/File Type filters above it.
-2. The Add/Edit Document panel with visibility and access control settings, including the role, capability, and user ID fields and the Public/Logged-in/Administrators access presets.
-3. Generating a signed share link for a document, with the maximum-use count field and the Revoke and Regenerate actions for controlling external access.
-4. The lifecycle scheduling controls for setting a document's go-live, archive, and expiry dates.
-5. The Batch Upload panel, showing the drag-and-drop area for adding multiple files at once with shared visibility, category, and versioning defaults.
-6. The Settings tab, showing the allowed file types, default visibility, serving mode, and the settings/category JSON import and export controls.
-7. The Frontend tab's Shortcode Builder alongside the document card style options, including button style, colours, and preview image size.
-8. A document card rendered on the front end via the `[kitgenix_document_manager_document]` shortcode, showing the preview image, title, file type, file size, and button.
+1. Document library management with stable links, lifecycle status, visibility, file information, search, and filters.
+2. Add/Edit Document controls for description, visibility, access presets, roles, capabilities, specific users, signed sharing, schedules, and versioning.
+3. Batch Upload for creating multiple document records with shared visibility, category, and versioning defaults.
+4. General Settings for allowed file types, default visibility, serving mode, version behaviour, and import/export.
+5. Frontend settings.
+6. Shortcode Builder for document links/cards and card presentation options.
+7. Frontend document-card output with preview/icon, title, optional description, file metadata, and action button.
 
-== Credits ==
-Built with ❤︎ by @kitgenix - https://kitgenix.com
+== Support and Development ==
+
+Documentation and support resources are available from [Kitgenix](https://kitgenix.com/) and from the plugin's WordPress.org support forum.
+
+If the plugin is useful to your site, you can also use the Donate link at the top of this readme to support continued maintenance and development.
 
 == Upgrade Notice ==
 
 = 2.0.0 =
-Major update: signed share link controls (max uses, revoke, regenerate), unified document lifecycle states with status/visibility/type filters, a redesigned admin UI, resumable downloads via HTTP Range support, and hardened protection against attachment REST/permalink access to Private, Restricted, or scheduled documents. Recommended for all websites.
+Adds signed-link limits/revocation, lifecycle states and scheduling events, redesigned administration, HTTP Range downloads, stronger attachment-access protection, and additional security hardening. Review the server-protection notes if you use Nginx or existing Media Library files.
 
 == Changelog ==
 
-= 2.0.0 (25 August 2026) =
+= 2.0.0 (31 August 2026) =
 
 * New: Signed share links now support an optional maximum-use count (0 = unlimited), a one-click "Revoke link" action that immediately invalidates the current link, and a "Regenerate" action that rotates the signing secret so all previously issued links stop working, even if they have not yet expired. These controls are available from the Documents table, edit modal, and native document editor.
 * New: Document versions can now include an optional label or note, such as "2024 policy update", when replacing a file. The Versions list now also shows who replaced each version and when.
