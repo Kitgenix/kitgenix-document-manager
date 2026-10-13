@@ -17,6 +17,59 @@ final class Event_Log {
     private const OPTION_KEY  = 'kitgenix_document_manager_event_log';
     private const MAX_ENTRIES = 100;
 
+    /** Option storing the user-selected log retention period, in days. */
+    private const RETENTION_OPTION_KEY = 'kitgenix_document_manager_log_retention_days';
+
+    /** Allowed retention periods and the default used when none/invalid is stored. */
+    private const ALLOWED_RETENTION_DAYS = [ 7, 14, 30 ];
+    private const DEFAULT_RETENTION_DAYS = 30;
+
+    /** Daily cron hook that prunes entries older than the configured retention period. */
+    public const PRUNE_CRON_HOOK = 'kitgenix_document_manager_prune_event_log';
+
+    /** Register the cron callback. Call on every request (mirrors Lifecycle::init()). */
+    public static function init(): void {
+        add_action( self::PRUNE_CRON_HOOK, [ __CLASS__, 'prune' ] );
+    }
+
+    /** Schedule the daily prune cron if not already scheduled. */
+    public static function schedule(): void {
+        if ( ! wp_next_scheduled( self::PRUNE_CRON_HOOK ) ) {
+            wp_schedule_event( time() + DAY_IN_SECONDS, 'daily', self::PRUNE_CRON_HOOK );
+        }
+    }
+
+    /** Remove the prune cron (e.g. on plugin deactivation). */
+    public static function unschedule(): void {
+        $timestamp = wp_next_scheduled( self::PRUNE_CRON_HOOK );
+        if ( $timestamp ) {
+            wp_unschedule_event( $timestamp, self::PRUNE_CRON_HOOK );
+        }
+        wp_clear_scheduled_hook( self::PRUNE_CRON_HOOK );
+    }
+
+    /**
+     * Return the configured log retention period, in days.
+     * Always one of ALLOWED_RETENTION_DAYS; falls back to the default if the
+     * stored value is missing or invalid.
+     */
+    public static function get_retention_days(): int {
+        $days = (int) get_option( self::RETENTION_OPTION_KEY, self::DEFAULT_RETENTION_DAYS );
+        return in_array( $days, self::ALLOWED_RETENTION_DAYS, true ) ? $days : self::DEFAULT_RETENTION_DAYS;
+    }
+
+    /**
+     * Save the log retention period, clamping to an allowed value.
+     *
+     * @param int $days Requested retention period in days.
+     * @return int The value actually stored.
+     */
+    public static function set_retention_days( int $days ): int {
+        $days = in_array( $days, self::ALLOWED_RETENTION_DAYS, true ) ? $days : self::DEFAULT_RETENTION_DAYS;
+        update_option( self::RETENTION_OPTION_KEY, $days, false );
+        return $days;
+    }
+
     /**
      * Record an event to the log.
      *
@@ -35,11 +88,48 @@ final class Event_Log {
             'code'    => sanitize_key( $code ),
         ];
 
+        $log = self::filter_by_age( $log );
+
         if ( count( $log ) > self::MAX_ENTRIES ) {
             $log = array_slice( $log, -self::MAX_ENTRIES );
         }
 
         update_option( self::OPTION_KEY, $log, false );
+    }
+
+    /**
+     * Remove entries older than the configured retention period from the
+     * stored log. Runs on the daily prune cron; also applied inline on every
+     * record() write so old entries never persist between cron runs.
+     */
+    public static function prune(): void {
+        $log = self::get_raw_log();
+        if ( empty( $log ) ) {
+            return;
+        }
+
+        $pruned = self::filter_by_age( $log );
+
+        if ( count( $pruned ) !== count( $log ) ) {
+            update_option( self::OPTION_KEY, $pruned, false );
+        }
+    }
+
+    /**
+     * @param array<int,array<string,mixed>> $log
+     * @return array<int,array<string,mixed>>
+     */
+    private static function filter_by_age( array $log ): array {
+        $cutoff = time() - ( self::get_retention_days() * DAY_IN_SECONDS );
+
+        return array_values(
+            array_filter(
+                $log,
+                static function ( array $entry ) use ( $cutoff ): bool {
+                    return ! isset( $entry['time'] ) || (int) $entry['time'] >= $cutoff;
+                }
+            )
+        );
     }
 
     /**

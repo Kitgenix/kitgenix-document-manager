@@ -5,9 +5,10 @@ Tags: document management, document library, secure downloads, file sharing, acc
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
+PluginScore Verification: pluginscore-verify-740348f742050da3270770aa37ca15cd
 
 Manage WordPress documents with stable links, access control, signed sharing, versions, scheduling and local analytics.
 
@@ -266,10 +267,16 @@ If the plugin is useful to your site, you can also use the Donate link at the to
 
 == Upgrade Notice ==
 
-= 2.0.0 =
-Adds signed-link limits/revocation, lifecycle states and scheduling events, redesigned administration, HTTP Range downloads, stronger attachment-access protection, and additional security hardening. Review the server-protection notes if you use Nginx or existing Media Library files.
+= 2.1.0 =
+Version 2.1.0 is recommended for all sites.
 
 == Changelog ==
+
+= 2.1.0 (13 October 2026) =
+
+* New: Added a configurable log auto-delete setting (7/14/30 days) to automatically remove old event log entries.
+* New: Added a "Request a Feature" button to the Need Help? sidebar, linking directly to this plugin's page on the Kitgenix roadmap (https://roadmap.kitgenix.com).
+* New: Added a "Request a Feature" banner below the plugin grid on the Kitgenix Hub page, linking to the shared Kitgenix roadmap.
 
 = 2.0.0 (31 August 2026) =
 

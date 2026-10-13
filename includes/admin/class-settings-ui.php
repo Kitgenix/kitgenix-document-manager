@@ -68,6 +68,7 @@ final class Settings_UI {
         // Admin AJAX (used by the shortcode builder search).
         add_action( 'wp_ajax_kitgenix_dm_search_docs', [ __CLASS__, 'ajax_search_docs' ] );
         add_action( 'admin_post_kitgenix_document_manager_clear_event_log', [ __CLASS__, 'handle_clear_event_log' ] );
+        add_action( 'admin_post_kitgenix_document_manager_save_log_retention', [ __CLASS__, 'handle_save_log_retention' ] );
         add_action( 'update_option_kitgenix_document_manager_settings', [ __CLASS__, 'on_settings_saved' ], 10, 3 );
     }
 
@@ -424,6 +425,7 @@ final class Settings_UI {
             . '<div class="kitgenix-button-group kitgenix-button-group-stack">'
             . '<a class="button button-secondary" href="' . esc_url( 'https://kitgenix.com/plugins/kitgenix-document-manager/documentation/' ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Documentation', 'kitgenix-document-manager' ) . '</a>'
             . '<a class="button button-primary" href="' . esc_url( 'https://kitgenix.com/plugins/kitgenix-document-manager/support' ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Request Support', 'kitgenix-document-manager' ) . '</a>'
+            . '<a class="button button-secondary" href="' . esc_url( 'https://roadmap.kitgenix.com/?product=document-manager' ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Request a Feature', 'kitgenix-document-manager' ) . '</a>'
             . '</div>'
             . '</div>'
             . '</div>';
@@ -3397,18 +3399,40 @@ final class Settings_UI {
                 . '</div>';
         }
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( isset( $_GET['kitgenix_log_retention_saved'] ) ) {
+            echo '<div class="kitgenix-notice kitgenix-notice-success" role="status">'
+                . '<div class="kitgenix-notice-body"><p class="kitgenix-notice-text">' . esc_html__( 'Log auto-delete setting saved.', 'kitgenix-document-manager' ) . '</p></div>'
+                . '</div>';
+        }
+
         $clear_url = wp_nonce_url(
             admin_url( 'admin-post.php?action=kitgenix_document_manager_clear_event_log' ),
             'kitgenix_document_manager_clear_event_log'
         );
 
-        $log_entries = Event_Log::get_raw_log();
-        $date_format = (string) get_option( 'date_format' ) . ' ' . (string) get_option( 'time_format' );
+        $log_entries     = Event_Log::get_raw_log();
+        $date_format     = (string) get_option( 'date_format' ) . ' ' . (string) get_option( 'time_format' );
+        $retention_days  = Event_Log::get_retention_days();
 
         echo '<div class="kitgenix-card">'
             . '<div class="kitgenix-card-head">'
             . '<div><h3 class="kitgenix-support-subheading">' . esc_html__( 'Activity Log', 'kitgenix-document-manager' ) . '</h3><p class="description">' . esc_html__( 'A record of recent plugin events. Entries show the timestamp, context, outcome, and a plain-English note. IP addresses and sensitive data are never stored here.', 'kitgenix-document-manager' ) . '</p></div>'
             . '<div class="kitgenix-card-head-actions">'
+            . '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="kitgenix-inline-form">'
+            . '<input type="hidden" name="action" value="kitgenix_document_manager_save_log_retention" />';
+
+        wp_nonce_field( 'kitgenix_document_manager_save_log_retention' );
+
+        echo '<label for="kitgenix_dm_log_retention_days">' . esc_html__( 'Auto-delete logs after', 'kitgenix-document-manager' ) . '</label>'
+            . '<select name="kitgenix_document_manager_log_retention_days" id="kitgenix_dm_log_retention_days">'
+            . '<option value="7" ' . selected( $retention_days, 7, false ) . '>' . esc_html__( '7 days', 'kitgenix-document-manager' ) . '</option>'
+            . '<option value="14" ' . selected( $retention_days, 14, false ) . '>' . esc_html__( '14 days', 'kitgenix-document-manager' ) . '</option>'
+            . '<option value="30" ' . selected( $retention_days, 30, false ) . '>' . esc_html__( '30 days', 'kitgenix-document-manager' ) . '</option>'
+            . '</select>'
+            . '<button type="submit" class="button button-secondary">' . esc_html__( 'Save', 'kitgenix-document-manager' ) . '</button>'
+            . '<p class="description">' . esc_html__( 'Log entries older than the selected period are removed automatically.', 'kitgenix-document-manager' ) . '</p>'
+            . '</form>'
             . '<a href="' . esc_url( $clear_url ) . '" class="button button-secondary" onclick="return confirm(\'' . esc_js( __( 'Clear all log entries?', 'kitgenix-document-manager' ) ) . '\')">' . esc_html__( 'Clear log', 'kitgenix-document-manager' ) . '</a>'
             . '</div>'
             . '</div>'
@@ -3525,6 +3549,20 @@ final class Settings_UI {
         check_admin_referer( 'kitgenix_document_manager_clear_event_log' );
         Event_Log::clear();
         wp_safe_redirect( admin_url( 'admin.php?page=kitgenix-document-manager&tab=log&kitgenix_log_cleared=1' ) );
+        exit;
+    }
+
+    public static function handle_save_log_retention(): void {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die( esc_html__( 'Permission denied.', 'kitgenix-document-manager' ), 403 );
+        }
+        check_admin_referer( 'kitgenix_document_manager_save_log_retention' );
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified above via check_admin_referer().
+        $days = isset( $_POST['kitgenix_document_manager_log_retention_days'] ) ? (int) $_POST['kitgenix_document_manager_log_retention_days'] : 0;
+        Event_Log::set_retention_days( $days );
+
+        wp_safe_redirect( admin_url( 'admin.php?page=kitgenix-document-manager&tab=log&kitgenix_log_retention_saved=1' ) );
         exit;
     }
 

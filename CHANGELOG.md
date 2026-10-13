@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.0 – 13 October 2026
+
+- **New:** Added a configurable log auto-delete setting (7/14/30 days) to automatically remove old event log entries.
+- **New:** Added a "Request a Feature" button to the Need Help? sidebar, linking directly to this plugin's page on the Kitgenix roadmap (https://roadmap.kitgenix.com).
+- **New:** Added a "Request a Feature" banner below the plugin grid on the Kitgenix Hub page, linking to the shared Kitgenix roadmap.
+
 ## 2.0.0 – 22 August 2026
 
 - **New:** Signed share links now support an optional maximum-use count (0 = unlimited), a one-click "Revoke link" action that immediately invalidates the current link, and a "Regenerate" action that rotates the signing secret so all previously issued links stop working, even if they have not yet expired. These controls are available from the Documents table, edit modal, and native document editor.

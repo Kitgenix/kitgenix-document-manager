@@ -8,7 +8,7 @@
  * Author Support URI: https://kitgenix.com/plugins/kitgenix-document-manager/support
  * Feature Request URI: https://kitgenix.com/plugins/kitgenix-document-manager/feature-request
  * Description:       Manage document downloads with stable links, granular access, lifecycle scheduling, and usage analytics.
- * Version:           2.0.0
+ * Version:           2.1.0
  * Requires at least: 6.0
  * Tested up to:      7.1
  * Requires PHP:      8.1
@@ -423,6 +423,14 @@ if ( ! function_exists( 'kitgenix_render_admin_page' ) ) {
                 'page'     => 'kitgenix-affiliate-link-manager',
                 'requires' => __( 'Manage affiliate short links, branded redirects, and click tracking from one WordPress dashboard.', 'kitgenix-document-manager' ),
             ],
+            [
+                'id'       => 'database_cleaner',
+                'name'     => __( 'Database Cleaner', 'kitgenix-document-manager' ),
+                'slug'     => 'kitgenix-database-cleaner',
+                'file'     => 'kitgenix-database-cleaner/kitgenix-database-cleaner.php',
+                'page'     => 'kitgenix-database-cleaner',
+                'requires' => __( 'Scan and clean your WordPress database safely, with plugin/theme attribution for every item found and a built-in recycle bin so nothing is ever deleted without a way back.', 'kitgenix-document-manager' ),
+            ],
         ];
 
         $slugs = [];
@@ -577,7 +585,17 @@ if ( ! function_exists( 'kitgenix_render_admin_page' ) ) {
                 . '</div>';
         }
 
-        echo '</div></div></div></div>';
+        echo '</div>'; // .kitgenix-hub-grid
+
+        echo '<div class="kitgenix-hub-feature-banner">'
+            . '<div class="kitgenix-hub-feature-banner-copy">'
+            . '<h2>' . esc_html__( 'Have an idea for a new feature?', 'kitgenix-document-manager' ) . '</h2>'
+            . '<p>' . esc_html__( 'Browse the roadmap, vote on ideas, and submit feature requests for any Kitgenix plugin.', 'kitgenix-document-manager' ) . '</p>'
+            . '</div>'
+            . '<a class="button button-primary" href="' . esc_url( 'https://roadmap.kitgenix.com' ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Request a Feature', 'kitgenix-document-manager' ) . '</a>'
+            . '</div>';
+
+        echo '</div></div></div>'; // .kitgenix-hub, .kitgenix-hub-wrap, .wrap
     }
 }
 
@@ -626,7 +644,7 @@ add_action( 'admin_enqueue_scripts', function ( string $hook_suffix ): void {
 // Constants (guarded)
 // -----------------------------------------------------------------------------
 if ( ! defined( 'KITGENIX_DOCUMENT_MANAGER_VERSION' ) ) {
-    define( 'KITGENIX_DOCUMENT_MANAGER_VERSION', '2.0.0' );
+    define( 'KITGENIX_DOCUMENT_MANAGER_VERSION', '2.1.0' );
 }
 if ( ! defined( 'KITGENIX_DOCUMENT_MANAGER_FILE' ) ) {
     define( 'KITGENIX_DOCUMENT_MANAGER_FILE', __FILE__ );
@@ -684,6 +702,7 @@ add_action( 'plugins_loaded', static function (): void {
     \KitgenixDocumentManager\Core\Endpoint::init();
     \KitgenixDocumentManager\Core\Attachment_Guard::init();
     \KitgenixDocumentManager\Core\Lifecycle::init();
+    \KitgenixDocumentManager\Core\Event_Log::init();
     \KitgenixDocumentManager\Core\Script_Handler::init();
     \KitgenixDocumentManager\Core\Shortcode::init();
     \KitgenixDocumentManager\Core\Rest::init();
@@ -721,6 +740,7 @@ if ( ! function_exists( 'kitgenix_document_manager_maybe_upgrade' ) ) {
         \KitgenixDocumentManager\Core\CPT::migrate_legacy_posts();
         \KitgenixDocumentManager\Core\kitgenix_document_manager_ensure_upload_dir();
         \KitgenixDocumentManager\Core\Lifecycle::schedule();
+        \KitgenixDocumentManager\Core\Event_Log::schedule();
 
         update_option( $option_key, $target, false );
     }
@@ -736,6 +756,7 @@ register_activation_hook( __FILE__, static function (): void {
     \KitgenixDocumentManager\Core\Capabilities::add_caps();
     \KitgenixDocumentManager\Core\kitgenix_document_manager_ensure_upload_dir();
     \KitgenixDocumentManager\Core\Lifecycle::schedule();
+    \KitgenixDocumentManager\Core\Event_Log::schedule();
 
     update_option( 'kitgenix_document_manager_db_version', \KitgenixDocumentManager\Core\kitgenix_document_manager_db_version(), false );
 
@@ -744,5 +765,6 @@ register_activation_hook( __FILE__, static function (): void {
 
 register_deactivation_hook( __FILE__, static function (): void {
     \KitgenixDocumentManager\Core\Lifecycle::unschedule();
+    \KitgenixDocumentManager\Core\Event_Log::unschedule();
     flush_rewrite_rules( false );
 } );
