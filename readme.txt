@@ -5,10 +5,10 @@ Tags: document management, document library, secure downloads, file sharing, acc
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 2.1.0
+Stable tag: 2.1.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
-PluginScore Verification: pluginscore-verify-740348f742050da3270770aa37ca15cd
+PluginScore Verification: pluginscore-verify-cd292433102057b9f2688f52b38c2505
 
 Manage WordPress documents with stable links, access control, signed sharing, versions, scheduling and local analytics.
 
@@ -267,10 +267,18 @@ If the plugin is useful to your site, you can also use the Donate link at the to
 
 == Upgrade Notice ==
 
-= 2.1.0 =
-Version 2.1.0 is recommended for all sites.
+= 2.1.2 =
+Version 2.1.2 is recommended for all sites.
 
 == Changelog ==
+
+= 2.1.2 (13 October 2026) =
+
+* Fix: Bump version to 2.1.2 across the plugin.
+
+= 2.1.1 (13 October 2026) =
+
+* Fix: Updated PluginScore Verification code.
 
 = 2.1.0 (13 October 2026) =
 

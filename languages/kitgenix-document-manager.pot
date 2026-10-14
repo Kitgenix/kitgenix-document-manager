@@ -2,21 +2,21 @@
 # This file is distributed under the GPLv3 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Kitgenix Document Manager 2.0.0\n"
+"Project-Id-Version: Kitgenix Document Manager 2.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/kitgenix-document-manager\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-08-30T16:12:30+00:00\n"
+"POT-Creation-Date: 2026-10-13T09:29:50+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: kitgenix-document-manager\n"
 
 #. Plugin Name of the plugin
 #: kitgenix-document-manager.php
-#: includes/admin/class-settings-ui.php:252
+#: includes/admin/class-settings-ui.php:253
 #: includes/admin/class-site-health.php:56
 msgid "Kitgenix Document Manager"
 msgstr ""
@@ -35,8 +35,8 @@ msgstr ""
 #: kitgenix-document-manager.php
 #: kitgenix-document-manager.php:74
 #: kitgenix-document-manager.php:75
-#: kitgenix-document-manager.php:443
-#: kitgenix-document-manager.php:447
+#: kitgenix-document-manager.php:451
+#: kitgenix-document-manager.php:455
 msgid "Kitgenix"
 msgstr ""
 
@@ -60,16 +60,16 @@ msgstr ""
 #: includes/admin/class-admin-columns.php:29
 #: includes/admin/class-document-metabox.php:55
 #: includes/admin/class-document-metabox.php:84
-#: includes/admin/class-settings-ui.php:999
-#: includes/admin/class-settings-ui.php:1244
-#: includes/admin/class-settings-ui.php:1391
+#: includes/admin/class-settings-ui.php:1001
+#: includes/admin/class-settings-ui.php:1246
+#: includes/admin/class-settings-ui.php:1393
 msgid "Visibility"
 msgstr ""
 
 #: includes/admin/class-admin-columns.php:30
-#: includes/admin/class-settings-ui.php:1000
-#: includes/admin/class-settings-ui.php:2689
-#: includes/admin/class-settings-ui.php:2850
+#: includes/admin/class-settings-ui.php:1002
+#: includes/admin/class-settings-ui.php:2691
+#: includes/admin/class-settings-ui.php:2852
 msgid "Actions"
 msgstr ""
 
@@ -81,53 +81,53 @@ msgstr ""
 #: includes/admin/class-admin-columns.php:53
 #: includes/admin/class-document-metabox.php:154
 #: includes/admin/class-document-metabox.php:191
-#: includes/admin/class-settings-ui.php:757
-#: includes/admin/class-settings-ui.php:1148
-#: includes/admin/class-settings-ui.php:1149
+#: includes/admin/class-settings-ui.php:759
 #: includes/admin/class-settings-ui.php:1150
-#: includes/admin/class-settings-ui.php:1932
+#: includes/admin/class-settings-ui.php:1151
+#: includes/admin/class-settings-ui.php:1152
+#: includes/admin/class-settings-ui.php:1934
 msgid "Copied"
 msgstr ""
 
 #: includes/admin/class-admin-columns.php:114
 #: includes/admin/class-document-metabox.php:87
-#: includes/admin/class-settings-ui.php:571
-#: includes/admin/class-settings-ui.php:915
-#: includes/admin/class-settings-ui.php:1248
-#: includes/admin/class-settings-ui.php:1397
-#: includes/admin/class-settings-ui.php:1531
-#: includes/admin/class-settings-ui.php:1614
+#: includes/admin/class-settings-ui.php:573
+#: includes/admin/class-settings-ui.php:917
+#: includes/admin/class-settings-ui.php:1250
+#: includes/admin/class-settings-ui.php:1399
+#: includes/admin/class-settings-ui.php:1533
+#: includes/admin/class-settings-ui.php:1616
 #: includes/core/helpers.php:353
 msgid "Private"
 msgstr ""
 
 #: includes/admin/class-admin-columns.php:114
 #: includes/admin/class-document-metabox.php:88
-#: includes/admin/class-settings-ui.php:574
-#: includes/admin/class-settings-ui.php:916
-#: includes/admin/class-settings-ui.php:1249
-#: includes/admin/class-settings-ui.php:1398
-#: includes/admin/class-settings-ui.php:1532
-#: includes/admin/class-settings-ui.php:1615
+#: includes/admin/class-settings-ui.php:576
+#: includes/admin/class-settings-ui.php:918
+#: includes/admin/class-settings-ui.php:1251
+#: includes/admin/class-settings-ui.php:1400
+#: includes/admin/class-settings-ui.php:1534
+#: includes/admin/class-settings-ui.php:1617
 #: includes/core/helpers.php:356
 msgid "Restricted"
 msgstr ""
 
 #: includes/admin/class-admin-columns.php:114
 #: includes/admin/class-document-metabox.php:86
-#: includes/admin/class-settings-ui.php:577
-#: includes/admin/class-settings-ui.php:914
-#: includes/admin/class-settings-ui.php:1247
-#: includes/admin/class-settings-ui.php:1396
-#: includes/admin/class-settings-ui.php:1530
-#: includes/admin/class-settings-ui.php:1613
+#: includes/admin/class-settings-ui.php:579
+#: includes/admin/class-settings-ui.php:916
+#: includes/admin/class-settings-ui.php:1249
+#: includes/admin/class-settings-ui.php:1398
+#: includes/admin/class-settings-ui.php:1532
+#: includes/admin/class-settings-ui.php:1615
 msgid "Public"
 msgstr ""
 
 #: includes/admin/class-admin-columns.php:134
-#: includes/admin/class-settings-ui.php:1182
-#: includes/admin/class-settings-ui.php:2705
-#: includes/admin/class-settings-ui.php:2881
+#: includes/admin/class-settings-ui.php:1184
+#: includes/admin/class-settings-ui.php:2707
+#: includes/admin/class-settings-ui.php:2883
 msgid "Edit"
 msgstr ""
 
@@ -172,7 +172,7 @@ msgid "Allowed user IDs"
 msgstr ""
 
 #: includes/admin/class-document-metabox.php:108
-#: includes/admin/class-settings-ui.php:725
+#: includes/admin/class-settings-ui.php:727
 msgid "Signed share link expiry"
 msgstr ""
 
@@ -187,34 +187,34 @@ msgid "Used so far: %s."
 msgstr ""
 
 #: includes/admin/class-document-metabox.php:123
-#: includes/admin/class-settings-ui.php:776
+#: includes/admin/class-settings-ui.php:778
 msgid "Available from"
 msgstr ""
 
 #: includes/admin/class-document-metabox.php:126
-#: includes/admin/class-settings-ui.php:786
+#: includes/admin/class-settings-ui.php:788
 msgid "Archive at"
 msgstr ""
 
 #: includes/admin/class-document-metabox.php:129
-#: includes/admin/class-settings-ui.php:796
+#: includes/admin/class-settings-ui.php:798
 msgid "Expire at"
 msgstr ""
 
 #: includes/admin/class-document-metabox.php:134
-#: includes/admin/class-settings-ui.php:1279
-#: includes/admin/class-settings-ui.php:1432
+#: includes/admin/class-settings-ui.php:1281
+#: includes/admin/class-settings-ui.php:1434
 msgid "Keep version history"
 msgstr ""
 
 #: includes/admin/class-document-metabox.php:149
-#: includes/admin/class-settings-ui.php:751
+#: includes/admin/class-settings-ui.php:753
 msgid "Signed share URL"
 msgstr ""
 
 #: includes/admin/class-document-metabox.php:154
-#: includes/admin/class-settings-ui.php:757
-#: includes/admin/class-settings-ui.php:1149
+#: includes/admin/class-settings-ui.php:759
+#: includes/admin/class-settings-ui.php:1151
 msgid "Copy share link"
 msgstr ""
 
@@ -231,7 +231,7 @@ msgid "Regenerate the signing secret? All previously issued links stop working i
 msgstr ""
 
 #: includes/admin/class-document-metabox.php:156
-#: includes/admin/class-settings-ui.php:760
+#: includes/admin/class-settings-ui.php:762
 msgid "Regenerate"
 msgstr ""
 
@@ -246,11 +246,11 @@ msgid "Current schedule status: %s"
 msgstr ""
 
 #: includes/admin/class-document-metabox.php:165
-#: includes/admin/class-settings-ui.php:596
-#: includes/admin/class-settings-ui.php:647
-#: includes/admin/class-settings-ui.php:772
+#: includes/admin/class-settings-ui.php:598
+#: includes/admin/class-settings-ui.php:649
+#: includes/admin/class-settings-ui.php:774
 #: includes/core/helpers.php:278
-#: kitgenix-document-manager.php:503
+#: kitgenix-document-manager.php:511
 msgid "Active"
 msgstr ""
 
@@ -279,13 +279,13 @@ msgid "Upload File"
 msgstr ""
 
 #: includes/admin/class-document-metabox.php:253
-#: includes/admin/class-settings-ui.php:1302
-#: includes/admin/class-settings-ui.php:1464
+#: includes/admin/class-settings-ui.php:1304
+#: includes/admin/class-settings-ui.php:1466
 msgid "Version label (optional)"
 msgstr ""
 
 #: includes/admin/class-document-metabox.php:254
-#: includes/admin/class-settings-ui.php:1468
+#: includes/admin/class-settings-ui.php:1470
 msgid "e.g. 2024 policy update"
 msgstr ""
 
@@ -304,20 +304,20 @@ msgstr ""
 
 #: includes/admin/class-document-metabox.php:382
 #: includes/admin/class-document-metabox.php:415
-#: includes/admin/class-settings-ui.php:2492
-#: includes/admin/class-settings-ui.php:2547
+#: includes/admin/class-settings-ui.php:2494
+#: includes/admin/class-settings-ui.php:2549
 msgid "Invalid request."
 msgstr ""
 
 #: includes/admin/class-document-metabox.php:387
 #: includes/admin/class-document-metabox.php:420
-#: includes/admin/class-settings-ui.php:2030
-#: includes/admin/class-settings-ui.php:2497
-#: includes/admin/class-settings-ui.php:2552
-#: includes/admin/class-settings-ui.php:2605
-#: includes/admin/class-settings-ui.php:2610
-#: includes/admin/class-settings-ui.php:3058
-#: includes/admin/class-settings-ui.php:3086
+#: includes/admin/class-settings-ui.php:2032
+#: includes/admin/class-settings-ui.php:2499
+#: includes/admin/class-settings-ui.php:2554
+#: includes/admin/class-settings-ui.php:2607
+#: includes/admin/class-settings-ui.php:2612
+#: includes/admin/class-settings-ui.php:3060
+#: includes/admin/class-settings-ui.php:3088
 msgid "Invalid document."
 msgstr ""
 
@@ -398,32 +398,32 @@ msgstr ""
 msgid "Replace failed: the file could not be saved to the media library. Please try again."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:179
+#: includes/admin/class-settings-ui.php:180
 msgid "Document saved."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:184
+#: includes/admin/class-settings-ui.php:185
 msgid "Document deleted (moved to Trash)."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:189
+#: includes/admin/class-settings-ui.php:190
 msgid "Version restored."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:194
+#: includes/admin/class-settings-ui.php:195
 msgid "Version deleted."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:199
+#: includes/admin/class-settings-ui.php:200
 msgid "Category saved."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:204
+#: includes/admin/class-settings-ui.php:205
 msgid "Category deleted."
 msgstr ""
 
 #. translators: %s is the number of documents created via batch upload
-#: includes/admin/class-settings-ui.php:217
+#: includes/admin/class-settings-ui.php:218
 #, php-format
 msgid "%s document created from batch upload."
 msgid_plural "%s documents created from batch upload."
@@ -431,1162 +431,1167 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s is the number of files that failed during batch upload
-#: includes/admin/class-settings-ui.php:228
+#: includes/admin/class-settings-ui.php:229
 #, php-format
 msgid "%s file could not be imported. Check the allowed file types and try again."
 msgid_plural "%s files could not be imported. Check the allowed file types and try again."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/class-settings-ui.php:253
-#: includes/admin/class-settings-ui.php:330
+#: includes/admin/class-settings-ui.php:254
+#: includes/admin/class-settings-ui.php:331
 #: kitgenix-document-manager.php:356
 msgid "Document Manager"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:273
+#: includes/admin/class-settings-ui.php:274
 #: kitgenix-document-manager.php:344
 msgid "Sorry, you are not allowed to access this page."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:337
-#: includes/admin/class-settings-ui.php:2849
+#: includes/admin/class-settings-ui.php:338
+#: includes/admin/class-settings-ui.php:2851
 #: includes/core/class-shortcode.php:232
 msgid "Documents"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:341
-#: includes/admin/class-settings-ui.php:891
+#: includes/admin/class-settings-ui.php:342
+#: includes/admin/class-settings-ui.php:893
 msgid "All Documents"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:341
+#: includes/admin/class-settings-ui.php:342
 msgid "Upload, edit, and manage document downloads"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:345
+#: includes/admin/class-settings-ui.php:346
 #: includes/core/class-cpt.php:88
 msgid "Categories"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:345
+#: includes/admin/class-settings-ui.php:346
 msgid "Group documents into browsable categories"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:349
-#: includes/admin/class-settings-ui.php:1312
-#: includes/admin/class-settings-ui.php:2645
+#: includes/admin/class-settings-ui.php:350
+#: includes/admin/class-settings-ui.php:1314
+#: includes/admin/class-settings-ui.php:2647
 msgid "Versions"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:349
+#: includes/admin/class-settings-ui.php:350
 msgid "Review, restore, or remove document version history"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:353
+#: includes/admin/class-settings-ui.php:354
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:354
+#: includes/admin/class-settings-ui.php:355
 msgid "Frontend"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:355
+#: includes/admin/class-settings-ui.php:356
 msgid "Log"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:356
+#: includes/admin/class-settings-ui.php:357
 msgid "Support"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:361
-#: includes/admin/class-settings-ui.php:364
+#: includes/admin/class-settings-ui.php:362
+#: includes/admin/class-settings-ui.php:365
 msgid "Search settings"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:364
+#: includes/admin/class-settings-ui.php:365
 msgid "Search settings…"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:366
+#: includes/admin/class-settings-ui.php:367
 msgid "Clear search"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:369
+#: includes/admin/class-settings-ui.php:370
 msgid "Toggle color theme"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:373
+#: includes/admin/class-settings-ui.php:374
 msgid "Kitgenix Hub"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:374
+#: includes/admin/class-settings-ui.php:375
 msgid "Toggle navigation"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:418
+#: includes/admin/class-settings-ui.php:419
 msgid "Help and links"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:422
+#: includes/admin/class-settings-ui.php:423
 msgid "Need Help?"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:423
+#: includes/admin/class-settings-ui.php:424
 msgid "Open the documentation for setup guidance or send us a support request if you need help configuring the plugin."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:425
+#: includes/admin/class-settings-ui.php:426
 msgid "Documentation"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:426
+#: includes/admin/class-settings-ui.php:427
 msgid "Request Support"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:433
+#: includes/admin/class-settings-ui.php:428
+#: kitgenix-document-manager.php:595
+msgid "Request a Feature"
+msgstr ""
+
+#: includes/admin/class-settings-ui.php:435
 msgid "Visit Our Official Facebook Group"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:434
+#: includes/admin/class-settings-ui.php:436
 msgid "Join the Kitgenix community to ask questions, share feedback, and keep up with product updates."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:436
+#: includes/admin/class-settings-ui.php:438
 msgid "Join Group"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:443
+#: includes/admin/class-settings-ui.php:445
 msgid "Follow Us"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:444
+#: includes/admin/class-settings-ui.php:446
 msgid "Keep up with new releases, tutorials, and product news across our channels."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:491
+#: includes/admin/class-settings-ui.php:493
 msgid "Copy plugin link:"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:497
+#: includes/admin/class-settings-ui.php:499
 msgid "Support Kitgenix"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:498
+#: includes/admin/class-settings-ui.php:500
 msgid "Help us keep building"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:499
+#: includes/admin/class-settings-ui.php:501
 msgid "One person builds and maintains this plugin, permanent links, access rules, versioning, lifecycle scheduling, all of it. A donation turns that into paid time instead of evenings squeezed around something else."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:502
+#: includes/admin/class-settings-ui.php:504
 msgid "Donate with PayPal"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:506
+#: includes/admin/class-settings-ui.php:508
 msgid "Donations are entirely optional. Kitgenix plugins keep working whether you donate or not."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:513
+#: includes/admin/class-settings-ui.php:515
 msgid "Leave a review"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:517
+#: includes/admin/class-settings-ui.php:519
 msgid "Read the docs"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:521
+#: includes/admin/class-settings-ui.php:523
 msgid "Copy plugin link"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:588
+#: includes/admin/class-settings-ui.php:590
 msgid "Set an expiry time to generate a signed share URL that bypasses login until it expires."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:629
+#: includes/admin/class-settings-ui.php:631
 msgid "This signed share link has expired. Update the expiry to generate a fresh URL."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:631
+#: includes/admin/class-settings-ui.php:633
 msgid "Anyone with this signed URL can access the current file until the expiry time."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:662
+#: includes/admin/class-settings-ui.php:664
 msgid "Access preset (optional)"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:663
+#: includes/admin/class-settings-ui.php:665
 msgid "Quickly fills in the visibility and access fields below for a common setup – every field stays editable afterwards, and nothing is saved until you submit the form."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:667
+#: includes/admin/class-settings-ui.php:669
 msgid "– Choose a preset –"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:668
+#: includes/admin/class-settings-ui.php:670
 msgid "Public – anyone can access"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:669
+#: includes/admin/class-settings-ui.php:671
 msgid "Logged-in users – any account"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:670
+#: includes/admin/class-settings-ui.php:672
 msgid "Administrators only"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:677
+#: includes/admin/class-settings-ui.php:679
 msgid "Allowed roles (optional)"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:678
+#: includes/admin/class-settings-ui.php:680
 msgid "Leave empty to use the base visibility rule. Add roles to require one of them for access."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:693
+#: includes/admin/class-settings-ui.php:695
 msgid "Required capability (optional)"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:694
+#: includes/admin/class-settings-ui.php:696
 msgid "Optional WordPress capability. Users with this capability can access the document even if they do not match a listed role."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:703
+#: includes/admin/class-settings-ui.php:705
 msgid "Allowed user IDs (optional)"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:704
+#: includes/admin/class-settings-ui.php:706
 msgid "Comma-separated WordPress user IDs for one-off access grants."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:726
+#: includes/admin/class-settings-ui.php:728
 msgid "Anyone with the generated link can access the current file until this time."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:735
+#: includes/admin/class-settings-ui.php:737
 msgid "Maximum uses (optional)"
 msgstr ""
 
 #. translators: %s: number of times the current signed link has been used to actually access the file
-#: includes/admin/class-settings-ui.php:739
+#: includes/admin/class-settings-ui.php:741
 #, php-format
 msgid "Leave at 0 for unlimited uses. Used so far: %s."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:758
+#: includes/admin/class-settings-ui.php:760
 msgid "Open share link"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:759
+#: includes/admin/class-settings-ui.php:761
 msgid "Revoke the current share link? Anyone with the existing URL will immediately lose access."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:759
+#: includes/admin/class-settings-ui.php:761
 msgid "Revoke link"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:760
+#: includes/admin/class-settings-ui.php:762
 msgid "Regenerate the signing secret? Every previously issued link (even unexpired ones) will stop working immediately."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:777
+#: includes/admin/class-settings-ui.php:779
 msgid "Leave empty to make the document available immediately."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:787
+#: includes/admin/class-settings-ui.php:789
 msgid "Archived documents stay in WordPress but stop appearing on the frontend."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:797
+#: includes/admin/class-settings-ui.php:799
 msgid "Expired documents return a gone response and stop serving through the stable link."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:805
+#: includes/admin/class-settings-ui.php:807
 msgid "Schedule status"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:822
-#: includes/admin/class-settings-ui.php:856
+#: includes/admin/class-settings-ui.php:824
+#: includes/admin/class-settings-ui.php:858
 msgid "No activity yet"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:850
+#: includes/admin/class-settings-ui.php:852
 msgid "Analytics"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:852
+#: includes/admin/class-settings-ui.php:854
 msgid "Total views:"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:853
+#: includes/admin/class-settings-ui.php:855
 msgid "Total downloads:"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:854
+#: includes/admin/class-settings-ui.php:856
 msgid "Last 30 days:"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:854
-#: includes/admin/class-settings-ui.php:855
+#: includes/admin/class-settings-ui.php:856
+#: includes/admin/class-settings-ui.php:857
 msgid "views"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:854
-#: includes/admin/class-settings-ui.php:855
+#: includes/admin/class-settings-ui.php:856
+#: includes/admin/class-settings-ui.php:857
 msgid "downloads"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:855
+#: includes/admin/class-settings-ui.php:857
 msgid "Signed-share access:"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:856
+#: includes/admin/class-settings-ui.php:858
 msgid "Last access:"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:891
+#: includes/admin/class-settings-ui.php:893
 msgid "Search, copy stable links, and replace files."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:897
+#: includes/admin/class-settings-ui.php:899
 msgid "Search documents"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:898
+#: includes/admin/class-settings-ui.php:900
 msgid "Search documents…"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:901
+#: includes/admin/class-settings-ui.php:903
 msgid "Filter by status"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:903
+#: includes/admin/class-settings-ui.php:905
 msgid "All statuses"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:904
+#: includes/admin/class-settings-ui.php:906
 #: includes/core/helpers.php:359
 msgid "Live"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:905
+#: includes/admin/class-settings-ui.php:907
 #: includes/core/helpers.php:284
 #: includes/core/helpers.php:338
 msgid "Scheduled"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:906
+#: includes/admin/class-settings-ui.php:908
 msgid "Restricted / Private"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:907
+#: includes/admin/class-settings-ui.php:909
 #: includes/core/helpers.php:294
 #: includes/core/helpers.php:341
 msgid "Archived"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:908
+#: includes/admin/class-settings-ui.php:910
 #: includes/core/helpers.php:289
 #: includes/core/helpers.php:344
 msgid "Expired"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:909
+#: includes/admin/class-settings-ui.php:911
 #: includes/core/helpers.php:323
 #: includes/core/helpers.php:332
 msgid "Unavailable"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:911
+#: includes/admin/class-settings-ui.php:913
 msgid "Filter by visibility"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:913
+#: includes/admin/class-settings-ui.php:915
 msgid "All visibility"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:918
+#: includes/admin/class-settings-ui.php:920
 msgid "Filter by file type"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:920
+#: includes/admin/class-settings-ui.php:922
 msgid "All file types"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:928
+#: includes/admin/class-settings-ui.php:930
 msgid "Clear"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:949
+#: includes/admin/class-settings-ui.php:951
 msgid "No documents yet"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:950
+#: includes/admin/class-settings-ui.php:952
 msgid "No documents yet. Add your first one below."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:961
+#: includes/admin/class-settings-ui.php:963
 msgid "Bulk action"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:963
+#: includes/admin/class-settings-ui.php:965
 msgid "Bulk actions"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:964
+#: includes/admin/class-settings-ui.php:966
 msgid "Set visibility to Public"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:965
+#: includes/admin/class-settings-ui.php:967
 msgid "Set visibility to Private"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:966
+#: includes/admin/class-settings-ui.php:968
 msgid "Set visibility to Restricted"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:967
+#: includes/admin/class-settings-ui.php:969
 msgid "Assign category"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:968
+#: includes/admin/class-settings-ui.php:970
 msgid "Clear category"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:969
+#: includes/admin/class-settings-ui.php:971
 msgid "Archive now"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:970
+#: includes/admin/class-settings-ui.php:972
 msgid "Clear lifecycle schedule"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:971
+#: includes/admin/class-settings-ui.php:973
 msgid "Move to Trash"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:978
+#: includes/admin/class-settings-ui.php:980
 msgid "Choose category"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:986
+#: includes/admin/class-settings-ui.php:988
 msgid "Apply"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:989
+#: includes/admin/class-settings-ui.php:991
 msgid "No documents selected."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:996
+#: includes/admin/class-settings-ui.php:998
 msgid "Select all documents"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:997
-#: includes/admin/class-settings-ui.php:1217
-#: includes/admin/class-settings-ui.php:1362
-#: includes/admin/class-settings-ui.php:2764
-#: includes/admin/class-settings-ui.php:2847
-#: includes/admin/class-settings-ui.php:2908
+#: includes/admin/class-settings-ui.php:999
+#: includes/admin/class-settings-ui.php:1219
+#: includes/admin/class-settings-ui.php:1364
+#: includes/admin/class-settings-ui.php:2766
+#: includes/admin/class-settings-ui.php:2849
+#: includes/admin/class-settings-ui.php:2910
 msgid "Name"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:998
-#: includes/admin/class-settings-ui.php:1259
-#: includes/admin/class-settings-ui.php:1409
-#: includes/admin/class-settings-ui.php:3503
+#: includes/admin/class-settings-ui.php:1000
+#: includes/admin/class-settings-ui.php:1261
+#: includes/admin/class-settings-ui.php:1411
+#: includes/admin/class-settings-ui.php:3527
 msgid "Category"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1147
+#: includes/admin/class-settings-ui.php:1149
 msgid "Open link"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1148
+#: includes/admin/class-settings-ui.php:1150
 msgid "Copy link"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1150
-#: includes/admin/class-settings-ui.php:1932
+#: includes/admin/class-settings-ui.php:1152
+#: includes/admin/class-settings-ui.php:1934
 msgid "Copy shortcode"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1183
+#: includes/admin/class-settings-ui.php:1185
 msgid "Move this document to the Trash?"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1183
-#: includes/admin/class-settings-ui.php:1329
-#: includes/admin/class-settings-ui.php:2882
+#: includes/admin/class-settings-ui.php:1185
+#: includes/admin/class-settings-ui.php:1331
+#: includes/admin/class-settings-ui.php:2884
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1192
+#: includes/admin/class-settings-ui.php:1194
 msgid "No documents match your search."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1203
-#: includes/admin/class-settings-ui.php:1349
+#: includes/admin/class-settings-ui.php:1205
+#: includes/admin/class-settings-ui.php:1351
 #: includes/core/class-cpt.php:30
 msgid "Edit Document"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1204
-#: includes/admin/class-settings-ui.php:2895
+#: includes/admin/class-settings-ui.php:1206
+#: includes/admin/class-settings-ui.php:2897
 msgid "Close"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1225
-#: includes/admin/class-settings-ui.php:1370
+#: includes/admin/class-settings-ui.php:1227
+#: includes/admin/class-settings-ui.php:1372
 msgid "Slug"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1226
-#: includes/admin/class-settings-ui.php:1371
+#: includes/admin/class-settings-ui.php:1228
+#: includes/admin/class-settings-ui.php:1373
 msgid "Leave blank to auto-generate. You can change it later."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1229
-#: includes/admin/class-settings-ui.php:1375
-#: includes/admin/class-settings-ui.php:2773
-#: includes/admin/class-settings-ui.php:2917
+#: includes/admin/class-settings-ui.php:1231
+#: includes/admin/class-settings-ui.php:1377
+#: includes/admin/class-settings-ui.php:2775
+#: includes/admin/class-settings-ui.php:2919
 msgid "Auto-generated from name"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1235
-#: includes/admin/class-settings-ui.php:1381
+#: includes/admin/class-settings-ui.php:1237
+#: includes/admin/class-settings-ui.php:1383
 msgid "Description (optional)"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1236
-#: includes/admin/class-settings-ui.php:1382
+#: includes/admin/class-settings-ui.php:1238
+#: includes/admin/class-settings-ui.php:1384
 msgid "Shown on the frontend document card when enabled in the Frontend tab."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1266
-#: includes/admin/class-settings-ui.php:1418
-#: includes/admin/class-settings-ui.php:1545
+#: includes/admin/class-settings-ui.php:1268
+#: includes/admin/class-settings-ui.php:1420
+#: includes/admin/class-settings-ui.php:1547
 msgid "– No category –"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1289
-#: includes/admin/class-settings-ui.php:1445
+#: includes/admin/class-settings-ui.php:1291
+#: includes/admin/class-settings-ui.php:1447
 msgid "Replace file (optional)"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1294
-#: includes/admin/class-settings-ui.php:1455
+#: includes/admin/class-settings-ui.php:1296
+#: includes/admin/class-settings-ui.php:1457
 msgid "Select from Media Library"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1303
+#: includes/admin/class-settings-ui.php:1305
 msgid "Only used if you upload/select a replacement file above."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1313
+#: includes/admin/class-settings-ui.php:1315
 msgid "When version history is enabled, previous files are listed here. You can restore or delete older versions."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1317
-#: includes/admin/class-settings-ui.php:2706
+#: includes/admin/class-settings-ui.php:1319
+#: includes/admin/class-settings-ui.php:2708
 msgid "Delete all old versions"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1331
-#: includes/admin/class-settings-ui.php:1484
-#: includes/admin/class-settings-ui.php:2810
-#: includes/admin/class-settings-ui.php:2944
+#: includes/admin/class-settings-ui.php:1333
+#: includes/admin/class-settings-ui.php:1486
+#: includes/admin/class-settings-ui.php:2812
+#: includes/admin/class-settings-ui.php:2946
 msgid "Cancel"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1332
-#: includes/admin/class-settings-ui.php:2945
+#: includes/admin/class-settings-ui.php:1334
+#: includes/admin/class-settings-ui.php:2947
 msgid "Save Changes"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1349
-#: includes/admin/class-settings-ui.php:1480
+#: includes/admin/class-settings-ui.php:1351
+#: includes/admin/class-settings-ui.php:1482
 msgid "Add Document"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1392
+#: includes/admin/class-settings-ui.php:1394
 msgid "Public is open, Private requires login, and Restricted applies the grant rules below."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1410
+#: includes/admin/class-settings-ui.php:1412
 msgid "Use categories to group documents (e.g. Policies, Guides, Forms)."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1433
+#: includes/admin/class-settings-ui.php:1435
 msgid "When enabled, replacements keep previous versions in the history."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1445
+#: includes/admin/class-settings-ui.php:1447
 msgid "Upload file"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1449
+#: includes/admin/class-settings-ui.php:1451
 msgid "Allowed types are controlled in Settings."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1465
+#: includes/admin/class-settings-ui.php:1467
 msgid "Only used if you upload/select a replacement file above. Shown in the Versions list."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1480
+#: includes/admin/class-settings-ui.php:1482
 msgid "Update Document"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1494
+#: includes/admin/class-settings-ui.php:1496
 msgid "Batch Upload"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1494
+#: includes/admin/class-settings-ui.php:1496
 msgid "Drop multiple files to create one document per file with shared visibility, category, and versioning defaults."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1504
+#: includes/admin/class-settings-ui.php:1506
 msgid "Drop files here"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1505
+#: includes/admin/class-settings-ui.php:1507
 msgid "or click to browse for multiple files at once."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1512
+#: includes/admin/class-settings-ui.php:1514
 msgid "Files"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1513
+#: includes/admin/class-settings-ui.php:1515
 msgid "Each uploaded file becomes a new document and uses its filename as the starting document name."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1527
-#: includes/admin/class-settings-ui.php:1610
+#: includes/admin/class-settings-ui.php:1529
+#: includes/admin/class-settings-ui.php:1612
 msgid "Default visibility"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1538
+#: includes/admin/class-settings-ui.php:1540
 msgid "Default category"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1557
+#: includes/admin/class-settings-ui.php:1559
 msgid "Keep version history for uploaded documents"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1569
+#: includes/admin/class-settings-ui.php:1571
 msgid "Create Documents from Files"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1589
+#: includes/admin/class-settings-ui.php:1591
 msgid "General Settings"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1589
+#: includes/admin/class-settings-ui.php:1591
 msgid "Control uploads, default visibility, and how files are served."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1601
+#: includes/admin/class-settings-ui.php:1603
 msgid "Allowed file extensions"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1602
+#: includes/admin/class-settings-ui.php:1604
 msgid "Comma-separated list (e.g. pdf, docx, xlsx)."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1621
+#: includes/admin/class-settings-ui.php:1623
 msgid "Serving mode"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1624
+#: includes/admin/class-settings-ui.php:1626
 msgid "Download (attachment)"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1625
+#: includes/admin/class-settings-ui.php:1627
 msgid "Inline (browser)"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1631
+#: includes/admin/class-settings-ui.php:1633
 msgid "Keep version history by default"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1642
+#: includes/admin/class-settings-ui.php:1644
 msgid "Delete old versions when history is disabled"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1653
+#: includes/admin/class-settings-ui.php:1655
 msgid "Private document behavior"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1656
+#: includes/admin/class-settings-ui.php:1658
 msgid "Redirect to login"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1657
+#: includes/admin/class-settings-ui.php:1659
 msgid "Return 403 Forbidden"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1663
+#: includes/admin/class-settings-ui.php:1665
 msgid "Delete documents and attachments on uninstall"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1676
+#: includes/admin/class-settings-ui.php:1678
 msgid "Save Settings"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1699
+#: includes/admin/class-settings-ui.php:1701
 msgid "Import / Export"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1699
+#: includes/admin/class-settings-ui.php:1701
 msgid "Move plugin settings and categories between sites. Documents, files, and analytics are never included."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1704
+#: includes/admin/class-settings-ui.php:1706
 msgid "Export settings & categories (.json)"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1713
+#: includes/admin/class-settings-ui.php:1715
 msgid "Import file"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1719
+#: includes/admin/class-settings-ui.php:1721
 msgid "Import settings & categories"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1737
+#: includes/admin/class-settings-ui.php:1739
 msgid "Frontend Card"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1737
+#: includes/admin/class-settings-ui.php:1739
 msgid "These settings control the default output of the document card shortcode."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1749
+#: includes/admin/class-settings-ui.php:1751
 msgid "Button label"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1750
+#: includes/admin/class-settings-ui.php:1752
 msgid "Default label for the “View” button on the card. Can be overridden per shortcode using button_label=\"...\"."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1762
+#: includes/admin/class-settings-ui.php:1764
 msgid "Button style"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1763
+#: includes/admin/class-settings-ui.php:1765
 msgid "Controls the default styling of the card button."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1767
+#: includes/admin/class-settings-ui.php:1769
 msgid "Outline"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1768
+#: includes/admin/class-settings-ui.php:1770
 msgid "Solid"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1774
+#: includes/admin/class-settings-ui.php:1776
 msgid "Open “View” link in a new tab"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1785
+#: includes/admin/class-settings-ui.php:1787
 msgid "Card fields"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1788
+#: includes/admin/class-settings-ui.php:1790
 msgid "Show file type"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1790
+#: includes/admin/class-settings-ui.php:1792
 msgid "Show file size"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1792
+#: includes/admin/class-settings-ui.php:1794
 msgid "Show description (if set on the document)"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1813
+#: includes/admin/class-settings-ui.php:1815
 msgid "Preview image size (px)"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1814
+#: includes/admin/class-settings-ui.php:1816
 msgid "Controls the displayed size of the thumbnail/icon on the card (CSS sizing)."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1822
+#: includes/admin/class-settings-ui.php:1824
 msgid "File type/size alignment"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1825
-msgid "Justify (label left, value right)"
-msgstr ""
-
-#: includes/admin/class-settings-ui.php:1826
-#: includes/admin/class-settings-ui.php:1837
-msgid "Left"
-msgstr ""
-
 #: includes/admin/class-settings-ui.php:1827
-#: includes/admin/class-settings-ui.php:1838
-msgid "Center"
+msgid "Justify (label left, value right)"
 msgstr ""
 
 #: includes/admin/class-settings-ui.php:1828
 #: includes/admin/class-settings-ui.php:1839
+msgid "Left"
+msgstr ""
+
+#: includes/admin/class-settings-ui.php:1829
+#: includes/admin/class-settings-ui.php:1840
+msgid "Center"
+msgstr ""
+
+#: includes/admin/class-settings-ui.php:1830
+#: includes/admin/class-settings-ui.php:1841
 msgid "Right"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1834
+#: includes/admin/class-settings-ui.php:1836
 msgid "Button alignment"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1840
+#: includes/admin/class-settings-ui.php:1842
 msgid "Justify (full width)"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1854
+#: includes/admin/class-settings-ui.php:1856
 msgid "Button colors (optional)"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1855
+#: includes/admin/class-settings-ui.php:1857
 msgid "Enter hex colors like #ffffff. Leave blank to use theme defaults. Useful if solid buttons are hard to read."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1859
+#: includes/admin/class-settings-ui.php:1861
 msgid "Text"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1860
+#: includes/admin/class-settings-ui.php:1862
 msgid "Background"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1861
+#: includes/admin/class-settings-ui.php:1863
 msgid "Border"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1863
+#: includes/admin/class-settings-ui.php:1865
 msgid "Hover text"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1864
+#: includes/admin/class-settings-ui.php:1866
 msgid "Hover background"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1865
+#: includes/admin/class-settings-ui.php:1867
 msgid "Hover border"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1874
+#: includes/admin/class-settings-ui.php:1876
 msgid "Save Frontend Settings"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1888
+#: includes/admin/class-settings-ui.php:1890
 msgid "Shortcode Builder"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1888
+#: includes/admin/class-settings-ui.php:1890
 msgid "Generate a shortcode for a single document or multiple documents inline."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1896
+#: includes/admin/class-settings-ui.php:1898
 msgid "Mode"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1898
+#: includes/admin/class-settings-ui.php:1900
 msgid "Single document"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1899
+#: includes/admin/class-settings-ui.php:1901
 msgid "Multiple documents"
-msgstr ""
-
-#: includes/admin/class-settings-ui.php:1904
-#: includes/admin/class-settings-ui.php:1915
-msgid "Search"
 msgstr ""
 
 #: includes/admin/class-settings-ui.php:1906
 #: includes/admin/class-settings-ui.php:1917
-msgid "Type to search documents..."
+msgid "Search"
 msgstr ""
 
 #: includes/admin/class-settings-ui.php:1908
+#: includes/admin/class-settings-ui.php:1919
+msgid "Type to search documents..."
+msgstr ""
+
+#: includes/admin/class-settings-ui.php:1910
 msgid "Start typing to search."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1919
+#: includes/admin/class-settings-ui.php:1921
 msgid "Start typing to search and tick the documents you want."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1926
+#: includes/admin/class-settings-ui.php:1928
 msgid "Shortcode"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1927
+#: includes/admin/class-settings-ui.php:1929
 msgid "Tip: You can also override behaviour per shortcode using attributes like slugs, image_size, and button_label."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1944
-#: includes/admin/class-settings-ui.php:2220
-#: includes/admin/class-settings-ui.php:2250
-#: includes/admin/class-settings-ui.php:2367
-#: includes/admin/class-settings-ui.php:2475
-#: includes/admin/class-settings-ui.php:2530
-#: includes/admin/class-settings-ui.php:2590
-#: includes/admin/class-settings-ui.php:2958
-#: includes/admin/class-settings-ui.php:3008
-#: includes/admin/class-settings-ui.php:3045
-#: includes/admin/class-settings-ui.php:3073
-#: includes/admin/class-settings-ui.php:3107
-#: includes/admin/class-settings-ui.php:3155
+#: includes/admin/class-settings-ui.php:1946
+#: includes/admin/class-settings-ui.php:2222
+#: includes/admin/class-settings-ui.php:2252
+#: includes/admin/class-settings-ui.php:2369
+#: includes/admin/class-settings-ui.php:2477
+#: includes/admin/class-settings-ui.php:2532
+#: includes/admin/class-settings-ui.php:2592
+#: includes/admin/class-settings-ui.php:2960
+#: includes/admin/class-settings-ui.php:3010
+#: includes/admin/class-settings-ui.php:3047
+#: includes/admin/class-settings-ui.php:3075
+#: includes/admin/class-settings-ui.php:3109
+#: includes/admin/class-settings-ui.php:3157
 msgid "Forbidden"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1951
-#: includes/admin/class-settings-ui.php:1954
-#: includes/admin/class-settings-ui.php:2226
-#: includes/admin/class-settings-ui.php:2229
-#: includes/admin/class-settings-ui.php:2257
-#: includes/admin/class-settings-ui.php:2260
-#: includes/admin/class-settings-ui.php:2374
-#: includes/admin/class-settings-ui.php:2377
-#: includes/admin/class-settings-ui.php:2481
-#: includes/admin/class-settings-ui.php:2484
-#: includes/admin/class-settings-ui.php:2536
-#: includes/admin/class-settings-ui.php:2539
-#: includes/admin/class-settings-ui.php:2596
-#: includes/admin/class-settings-ui.php:2599
-#: includes/admin/class-settings-ui.php:2963
-#: includes/admin/class-settings-ui.php:2966
-#: includes/admin/class-settings-ui.php:3014
-#: includes/admin/class-settings-ui.php:3017
-#: includes/admin/class-settings-ui.php:3051
-#: includes/admin/class-settings-ui.php:3079
+#: includes/admin/class-settings-ui.php:1953
+#: includes/admin/class-settings-ui.php:1956
+#: includes/admin/class-settings-ui.php:2228
+#: includes/admin/class-settings-ui.php:2231
+#: includes/admin/class-settings-ui.php:2259
+#: includes/admin/class-settings-ui.php:2262
+#: includes/admin/class-settings-ui.php:2376
+#: includes/admin/class-settings-ui.php:2379
+#: includes/admin/class-settings-ui.php:2483
+#: includes/admin/class-settings-ui.php:2486
+#: includes/admin/class-settings-ui.php:2538
+#: includes/admin/class-settings-ui.php:2541
+#: includes/admin/class-settings-ui.php:2598
+#: includes/admin/class-settings-ui.php:2601
+#: includes/admin/class-settings-ui.php:2965
+#: includes/admin/class-settings-ui.php:2968
+#: includes/admin/class-settings-ui.php:3016
+#: includes/admin/class-settings-ui.php:3019
+#: includes/admin/class-settings-ui.php:3053
+#: includes/admin/class-settings-ui.php:3081
 msgid "Invalid nonce"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1979
+#: includes/admin/class-settings-ui.php:1981
 msgid "Signed share link expiry is invalid."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1982
+#: includes/admin/class-settings-ui.php:1984
 msgid "Available from date is invalid."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1985
+#: includes/admin/class-settings-ui.php:1987
 msgid "Archive date is invalid."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1988
+#: includes/admin/class-settings-ui.php:1990
 msgid "Expiry date is invalid."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1996
+#: includes/admin/class-settings-ui.php:1998
 msgid "Archive date must be later than the availability date."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:1999
+#: includes/admin/class-settings-ui.php:2001
 msgid "Expiry date must be later than the availability date."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2014
+#: includes/admin/class-settings-ui.php:2016
 msgid "Name is required."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2022
+#: includes/admin/class-settings-ui.php:2024
 msgid "Your document name contains emoji or special characters that your site database cannot store. Remove those characters from the name, or update your database to use utf8mb4."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2058
+#: includes/admin/class-settings-ui.php:2060
 msgid "Save failed. Please try again."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2151
+#: includes/admin/class-settings-ui.php:2153
 msgid "Invalid media selection."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2157
+#: includes/admin/class-settings-ui.php:2159
 msgid "Selected media file is missing or unreadable."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2166
+#: includes/admin/class-settings-ui.php:2168
 msgid "Selected media type is not allowed by the plugin settings."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2208
+#: includes/admin/class-settings-ui.php:2210
 msgid "Please upload a file or select one from the Media Library."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2267
+#: includes/admin/class-settings-ui.php:2269
 msgid "Select at least one document first."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2271
+#: includes/admin/class-settings-ui.php:2273
 msgid "Choose a valid bulk action."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2281
+#: includes/admin/class-settings-ui.php:2283
 msgid "Choose a category for the bulk category update."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2286
+#: includes/admin/class-settings-ui.php:2288
 msgid "Invalid category selected."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2349
+#: includes/admin/class-settings-ui.php:2351
 msgid "No documents were updated."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2382
+#: includes/admin/class-settings-ui.php:2384
 msgid "Add at least one file to the batch upload."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2396
+#: includes/admin/class-settings-ui.php:2398
 msgid "Invalid category selected for the batch upload."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2457
+#: includes/admin/class-settings-ui.php:2459
 msgid "Batch upload failed. Check the allowed file types and try again."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2501
-#: includes/admin/class-settings-ui.php:2556
+#: includes/admin/class-settings-ui.php:2503
+#: includes/admin/class-settings-ui.php:2558
 msgid "Version history is not enabled for this document."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2506
-#: includes/admin/class-settings-ui.php:2511
-#: includes/admin/class-settings-ui.php:2566
-#: includes/admin/class-settings-ui.php:2571
+#: includes/admin/class-settings-ui.php:2508
+#: includes/admin/class-settings-ui.php:2513
+#: includes/admin/class-settings-ui.php:2568
+#: includes/admin/class-settings-ui.php:2573
 msgid "Invalid version."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2561
+#: includes/admin/class-settings-ui.php:2563
 msgid "You cannot delete the current version."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2645
+#: includes/admin/class-settings-ui.php:2647
 msgid "Manage version history for documents that have older files saved."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2677
+#: includes/admin/class-settings-ui.php:2679
 msgid "No version history yet"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2678
+#: includes/admin/class-settings-ui.php:2680
 msgid "No documents currently have older versions saved."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2687
+#: includes/admin/class-settings-ui.php:2689
 msgid "Document"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2688
+#: includes/admin/class-settings-ui.php:2690
 msgid "Versions saved"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2706
+#: includes/admin/class-settings-ui.php:2708
 msgid "Delete all old versions for this document? This cannot be undone."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2751
-#: includes/admin/class-settings-ui.php:2894
+#: includes/admin/class-settings-ui.php:2753
+#: includes/admin/class-settings-ui.php:2896
 #: includes/core/class-cpt.php:84
 msgid "Edit Category"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2751
-#: includes/admin/class-settings-ui.php:2806
+#: includes/admin/class-settings-ui.php:2753
+#: includes/admin/class-settings-ui.php:2808
 msgid "Add Category"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2771
-#: includes/admin/class-settings-ui.php:2915
+#: includes/admin/class-settings-ui.php:2773
+#: includes/admin/class-settings-ui.php:2917
 msgid "Slug (optional)"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2778
-#: includes/admin/class-settings-ui.php:2922
+#: includes/admin/class-settings-ui.php:2780
+#: includes/admin/class-settings-ui.php:2924
 msgid "Parent category (optional)"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2785
-#: includes/admin/class-settings-ui.php:2929
+#: includes/admin/class-settings-ui.php:2787
+#: includes/admin/class-settings-ui.php:2931
 msgid "– No parent –"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2797
+#: includes/admin/class-settings-ui.php:2799
 msgid "About categories"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2799
+#: includes/admin/class-settings-ui.php:2801
 msgid "Categories are only used inside this plugin to organize documents."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2806
+#: includes/admin/class-settings-ui.php:2808
 #: includes/core/class-cpt.php:85
 msgid "Update Category"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2829
+#: includes/admin/class-settings-ui.php:2831
 #: includes/core/class-cpt.php:81
 msgid "All Categories"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2829
+#: includes/admin/class-settings-ui.php:2831
 msgid "Add, edit, or delete categories used for organizing documents."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2836
+#: includes/admin/class-settings-ui.php:2838
 msgid "No categories yet"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2837
+#: includes/admin/class-settings-ui.php:2839
 msgid "No categories yet."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2848
+#: includes/admin/class-settings-ui.php:2850
 msgid "Parent"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2882
+#: includes/admin/class-settings-ui.php:2884
 msgid "Delete this category? Documents will be left uncategorized."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:2979
+#: includes/admin/class-settings-ui.php:2981
 msgid "Category name is required."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3023
-#: includes/admin/class-settings-ui.php:3028
+#: includes/admin/class-settings-ui.php:3025
+#: includes/admin/class-settings-ui.php:3030
 msgid "Invalid category."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3062
+#: includes/admin/class-settings-ui.php:3064
 msgid "An administrator revoked a document's signed share link."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3090
+#: includes/admin/class-settings-ui.php:3092
 msgid "An administrator regenerated a document's share-link signing secret; all previously issued links are now invalid."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3162
+#: includes/admin/class-settings-ui.php:3164
 msgid "Choose a settings export file to import."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3170
+#: includes/admin/class-settings-ui.php:3172
 msgid "That file does not look like a Kitgenix Document Manager export."
 msgstr ""
 
 #. translators: %d: number of categories created during import
-#: includes/admin/class-settings-ui.php:3210
+#: includes/admin/class-settings-ui.php:3212
 #, php-format
 msgid "An administrator imported plugin settings and %d new categories from an export file."
 msgstr ""
 
 #. translators: %s is the number of documents updated
-#: includes/admin/class-settings-ui.php:3258
+#: includes/admin/class-settings-ui.php:3260
 #, php-format
 msgid "%s document is now public."
 msgid_plural "%s documents are now public."
@@ -1594,7 +1599,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s is the number of documents updated
-#: includes/admin/class-settings-ui.php:3265
+#: includes/admin/class-settings-ui.php:3267
 #, php-format
 msgid "%s document is now private."
 msgid_plural "%s documents are now private."
@@ -1602,7 +1607,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s is the number of documents updated
-#: includes/admin/class-settings-ui.php:3272
+#: includes/admin/class-settings-ui.php:3274
 #, php-format
 msgid "%s document moved to the selected category."
 msgid_plural "%s documents moved to the selected category."
@@ -1610,7 +1615,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s is the number of documents updated
-#: includes/admin/class-settings-ui.php:3279
+#: includes/admin/class-settings-ui.php:3281
 #, php-format
 msgid "%s document category cleared."
 msgid_plural "%s document categories cleared."
@@ -1618,7 +1623,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s is the number of documents updated
-#: includes/admin/class-settings-ui.php:3286
+#: includes/admin/class-settings-ui.php:3288
 #, php-format
 msgid "%s document archived."
 msgid_plural "%s documents archived."
@@ -1626,7 +1631,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s is the number of documents updated
-#: includes/admin/class-settings-ui.php:3293
+#: includes/admin/class-settings-ui.php:3295
 #, php-format
 msgid "%s document lifecycle schedule cleared."
 msgid_plural "%s document lifecycle schedules cleared."
@@ -1634,7 +1639,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s is the number of documents updated
-#: includes/admin/class-settings-ui.php:3300
+#: includes/admin/class-settings-ui.php:3302
 #, php-format
 msgid "%s document moved to Trash."
 msgid_plural "%s documents moved to Trash."
@@ -1642,7 +1647,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s is the number of documents updated
-#: includes/admin/class-settings-ui.php:3307
+#: includes/admin/class-settings-ui.php:3309
 #, php-format
 msgid "%s document updated."
 msgid_plural "%s documents updated."
@@ -1650,184 +1655,213 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d is the position of the file in the batch upload
-#: includes/admin/class-settings-ui.php:3327
+#: includes/admin/class-settings-ui.php:3329
 #, php-format
 msgid "Document %d"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3366
+#: includes/admin/class-settings-ui.php:3368
 msgid "Could not save the document."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3376
+#: includes/admin/class-settings-ui.php:3378
 msgid "Save failed due to a database character set limitation (often caused by emoji/special characters). Try removing emoji/special characters from the name, or update the database to utf8mb4."
 msgstr ""
 
 #. translators: %s is the database error message
-#: includes/admin/class-settings-ui.php:3384
+#: includes/admin/class-settings-ui.php:3386
 #, php-format
 msgid "(Database error: %s)"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3396
+#: includes/admin/class-settings-ui.php:3398
 msgid "Event log cleared."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3410
-msgid "Activity Log"
-msgstr ""
-
-#: includes/admin/class-settings-ui.php:3410
-msgid "A record of recent plugin events. Entries show the timestamp, context, outcome, and a plain-English note. IP addresses and sensitive data are never stored here."
-msgstr ""
-
-#: includes/admin/class-settings-ui.php:3412
-msgid "Clear all log entries?"
-msgstr ""
-
-#: includes/admin/class-settings-ui.php:3412
-msgid "Clear log"
+#: includes/admin/class-settings-ui.php:3405
+msgid "Log auto-delete setting saved."
 msgstr ""
 
 #: includes/admin/class-settings-ui.php:3420
-msgid "No events logged yet"
+msgid "Activity Log"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3421
-msgid "Activity will appear here as it happens."
+#: includes/admin/class-settings-ui.php:3420
+msgid "A record of recent plugin events. Entries show the timestamp, context, outcome, and a plain-English note. IP addresses and sensitive data are never stored here."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3426
-msgid "Search log…"
+#: includes/admin/class-settings-ui.php:3427
+msgid "Auto-delete logs after"
+msgstr ""
+
+#: includes/admin/class-settings-ui.php:3429
+msgid "7 days"
+msgstr ""
+
+#: includes/admin/class-settings-ui.php:3430
+msgid "14 days"
+msgstr ""
+
+#: includes/admin/class-settings-ui.php:3431
+msgid "30 days"
 msgstr ""
 
 #: includes/admin/class-settings-ui.php:3433
-msgid "Time"
+msgid "Save"
 msgstr ""
 
 #: includes/admin/class-settings-ui.php:3434
-msgid "Context"
-msgstr ""
-
-#: includes/admin/class-settings-ui.php:3435
-msgid "Outcome"
+msgid "Log entries older than the selected period are removed automatically."
 msgstr ""
 
 #: includes/admin/class-settings-ui.php:3436
+msgid "Clear all log entries?"
+msgstr ""
+
+#: includes/admin/class-settings-ui.php:3436
+msgid "Clear log"
+msgstr ""
+
+#: includes/admin/class-settings-ui.php:3444
+msgid "No events logged yet"
+msgstr ""
+
+#: includes/admin/class-settings-ui.php:3445
+msgid "Activity will appear here as it happens."
+msgstr ""
+
+#: includes/admin/class-settings-ui.php:3450
+msgid "Search log…"
+msgstr ""
+
+#: includes/admin/class-settings-ui.php:3457
+msgid "Time"
+msgstr ""
+
+#: includes/admin/class-settings-ui.php:3458
+msgid "Context"
+msgstr ""
+
+#: includes/admin/class-settings-ui.php:3459
+msgid "Outcome"
+msgstr ""
+
+#: includes/admin/class-settings-ui.php:3460
 msgid "Note"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3447
-#: includes/admin/class-settings-ui.php:3450
-#: includes/core/class-event-log.php:161
+#: includes/admin/class-settings-ui.php:3471
+#: includes/admin/class-settings-ui.php:3474
+#: includes/core/class-event-log.php:251
 msgid "Unknown time"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3469
+#: includes/admin/class-settings-ui.php:3493
 msgid "No matching log entries"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3485
+#: includes/admin/class-settings-ui.php:3509
 msgid "What the categories mean"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3486
+#: includes/admin/class-settings-ui.php:3510
 msgid "Some events are genuine problems that need attention; others are expected behavior and can be ignored."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3489
+#: includes/admin/class-settings-ui.php:3513
 msgid "An administrator saved changes on the plugin settings page."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3489
+#: includes/admin/class-settings-ui.php:3513
 msgid "None."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3490
+#: includes/admin/class-settings-ui.php:3514
 msgid "A user without permission attempted to upload or replace a document file."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3490
+#: includes/admin/class-settings-ui.php:3514
 msgid "Usually not a problem – WordPress blocked it correctly. If an admin was blocked, check their role/capabilities."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3491
+#: includes/admin/class-settings-ui.php:3515
 msgid "The upload could not be completed (no file reached the server, or WordPress rejected it as invalid, oversized, or incomplete)."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3491
+#: includes/admin/class-settings-ui.php:3515
 msgid "Check the file and your server's upload limits (upload_max_filesize, post_max_size), then try again."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3492
+#: includes/admin/class-settings-ui.php:3516
 msgid "The plugin's uploads folder could not be created or written to."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3492
+#: includes/admin/class-settings-ui.php:3516
 msgid "Check file permissions on wp-content/uploads. Contact your host if needed."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3493
+#: includes/admin/class-settings-ui.php:3517
 msgid "A file was rejected because its extension is not on the allowed list."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3493
+#: includes/admin/class-settings-ui.php:3517
 msgid "If the file is legitimate, add its extension in Settings → Allowed file types."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3494
+#: includes/admin/class-settings-ui.php:3518
 msgid "A file saved to disk, but WordPress could not create its attachment record."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3494
+#: includes/admin/class-settings-ui.php:3518
 msgid "Check database health and available storage."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3495
+#: includes/admin/class-settings-ui.php:3519
 msgid "A denied request had no share-link parameters at all."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3495
+#: includes/admin/class-settings-ui.php:3519
 msgid "None – this is the normal case for ordinary visits."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3496
+#: includes/admin/class-settings-ui.php:3520
 msgid "A share link was used after its expiry time had passed."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3496
+#: includes/admin/class-settings-ui.php:3520
 msgid "Usually not a problem – links are meant to expire. Ask the user to request a new link."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3497
+#: includes/admin/class-settings-ui.php:3521
 msgid "A share link was used after the document's share settings changed (a new link was issued since)."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3497
+#: includes/admin/class-settings-ui.php:3521
 msgid "Usually not a problem – ask the user to request a fresh link."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3498
+#: includes/admin/class-settings-ui.php:3522
 msgid "A share link's signature did not match its parameters – the URL was altered or fabricated."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3498
+#: includes/admin/class-settings-ui.php:3522
 msgid "Genuine issue. Investigate if it repeats from the same source; the block is working correctly."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3504
+#: includes/admin/class-settings-ui.php:3528
 msgid "What it means"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3505
+#: includes/admin/class-settings-ui.php:3529
 msgid "Action needed?"
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3523
+#: includes/admin/class-settings-ui.php:3547
+#: includes/admin/class-settings-ui.php:3557
 msgid "Permission denied."
 msgstr ""
 
-#: includes/admin/class-settings-ui.php:3532
+#: includes/admin/class-settings-ui.php:3570
 msgid "Plugin settings were saved via the admin settings page."
 msgstr ""
 
@@ -1918,63 +1952,63 @@ msgstr ""
 msgid "New Category Name"
 msgstr ""
 
-#: includes/core/class-event-log.php:73
+#: includes/core/class-event-log.php:163
 msgid "An administrator saved changes on the plugin settings page. Routine – no action needed."
 msgstr ""
 
-#: includes/core/class-event-log.php:79
+#: includes/core/class-event-log.php:169
 msgid "The user attempting the upload did not have permission to manage documents. Expected if a non-admin tried to upload directly; check role/capability settings if this was unexpected."
 msgstr ""
 
-#: includes/core/class-event-log.php:83
+#: includes/core/class-event-log.php:173
 msgid "No temporary file was received from the browser. Usually caused by a large file, a slow connection, or a server upload limit. Check your server's upload_max_filesize and post_max_size."
 msgstr ""
 
-#: includes/core/class-event-log.php:87
+#: includes/core/class-event-log.php:177
 msgid "The plugin's uploads folder could not be created or is not writable. Check file permissions on wp-content/uploads."
 msgstr ""
 
-#: includes/core/class-event-log.php:91
+#: includes/core/class-event-log.php:181
 msgid "WordPress rejected the uploaded file (invalid type, oversized, or a partial upload). Check the file and your server's upload limits."
 msgstr ""
 
-#: includes/core/class-event-log.php:95
+#: includes/core/class-event-log.php:185
 msgid "The upload was reported as successful but the file could not be found on disk afterwards. Check available disk space and file permissions."
 msgstr ""
 
-#: includes/core/class-event-log.php:99
+#: includes/core/class-event-log.php:189
 msgid "The uploaded file's extension is not on the allowed list. If this was a legitimate file, add its extension in Settings → Allowed file types."
 msgstr ""
 
-#: includes/core/class-event-log.php:103
+#: includes/core/class-event-log.php:193
 msgid "The file was saved to disk but WordPress could not create the attachment record. Check database health and available storage."
 msgstr ""
 
-#: includes/core/class-event-log.php:109
+#: includes/core/class-event-log.php:199
 msgid "The request did not include any share-link parameters. Normal for ordinary visits to a document page – usually not a problem."
 msgstr ""
 
-#: includes/core/class-event-log.php:113
+#: includes/core/class-event-log.php:203
 msgid "The share link's expiry time has passed. This is expected once a shared link reaches the end of its life – usually not a problem. Ask the user to request a new link."
 msgstr ""
 
-#: includes/core/class-event-log.php:117
+#: includes/core/class-event-log.php:207
 msgid "The link was generated before the document's share settings were last changed (a new link was issued since), so its signature no longer matches. Usually not a problem – ask the user to request a new link."
 msgstr ""
 
-#: includes/core/class-event-log.php:121
+#: includes/core/class-event-log.php:211
 msgid "The link's signature does not match its parameters – the URL was altered, corrupted, or fabricated. Genuine issue: monitor for repeated attempts from the same source."
 msgstr ""
 
-#: includes/core/class-event-log.php:125
+#: includes/core/class-event-log.php:215
 msgid "The share link has reached its maximum number of uses. Regenerate or issue a new link if further access is needed."
 msgstr ""
 
-#: includes/core/class-event-log.php:135
+#: includes/core/class-event-log.php:225
 msgid "No details available for this event."
 msgstr ""
 
-#: includes/core/class-event-log.php:145
+#: includes/core/class-event-log.php:235
 msgid "No recent events recorded yet."
 msgstr ""
 
@@ -2148,54 +2182,70 @@ msgstr ""
 msgid "Manage affiliate short links, branded redirects, and click tracking from one WordPress dashboard."
 msgstr ""
 
-#: kitgenix-document-manager.php:448
+#: kitgenix-document-manager.php:428
+msgid "Database Cleaner"
+msgstr ""
+
+#: kitgenix-document-manager.php:432
+msgid "Scan and clean your WordPress database safely, with plugin/theme attribution for every item found and a built-in recycle bin so nothing is ever deleted without a way back."
+msgstr ""
+
+#: kitgenix-document-manager.php:456
 msgid "Install, activate, open, and review Kitgenix plugins."
 msgstr ""
 
 #. translators: %s is the number of active installs and may include a thousands separator, e.g. "1,234". The "+" suffix is literal.
-#: kitgenix-document-manager.php:487
+#: kitgenix-document-manager.php:495
 #, php-format
 msgid "%s+ installs"
 msgstr ""
 
 #. translators: %s is the average rating out of 5 with one decimal place, e.g. "4.5". The star symbol (★) precedes the number.
-#: kitgenix-document-manager.php:496
+#: kitgenix-document-manager.php:504
 #, php-format
 msgid "★ %s/5"
 msgstr ""
 
-#: kitgenix-document-manager.php:501
+#: kitgenix-document-manager.php:509
 msgid "Not installed"
 msgstr ""
 
-#: kitgenix-document-manager.php:505
+#: kitgenix-document-manager.php:513
 msgid "Installed (Inactive)"
 msgstr ""
 
-#: kitgenix-document-manager.php:525
+#: kitgenix-document-manager.php:533
 msgid "Install"
 msgstr ""
 
-#: kitgenix-document-manager.php:532
+#: kitgenix-document-manager.php:540
 msgid "Activate"
 msgstr ""
 
-#: kitgenix-document-manager.php:534
+#: kitgenix-document-manager.php:542
 msgid "You do not have permission to activate plugins."
 msgstr ""
 
-#: kitgenix-document-manager.php:547
+#: kitgenix-document-manager.php:555
 msgid "Open"
 msgstr ""
 
-#: kitgenix-document-manager.php:552
+#: kitgenix-document-manager.php:560
 msgid "Details"
 msgstr ""
 
-#: kitgenix-document-manager.php:556
+#: kitgenix-document-manager.php:564
 msgid "Review"
 msgstr ""
 
-#: kitgenix-document-manager.php:557
+#: kitgenix-document-manager.php:565
 msgid "Support Forum"
+msgstr ""
+
+#: kitgenix-document-manager.php:592
+msgid "Have an idea for a new feature?"
+msgstr ""
+
+#: kitgenix-document-manager.php:593
+msgid "Browse the roadmap, vote on ideas, and submit feature requests for any Kitgenix plugin."
 msgstr ""

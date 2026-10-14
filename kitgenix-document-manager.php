@@ -8,7 +8,7 @@
  * Author Support URI: https://kitgenix.com/plugins/kitgenix-document-manager/support
  * Feature Request URI: https://kitgenix.com/plugins/kitgenix-document-manager/feature-request
  * Description:       Manage document downloads with stable links, granular access, lifecycle scheduling, and usage analytics.
- * Version:           2.1.0
+ * Version:           2.1.2
  * Requires at least: 6.0
  * Tested up to:      7.1
  * Requires PHP:      8.1
@@ -644,7 +644,7 @@ add_action( 'admin_enqueue_scripts', function ( string $hook_suffix ): void {
 // Constants (guarded)
 // -----------------------------------------------------------------------------
 if ( ! defined( 'KITGENIX_DOCUMENT_MANAGER_VERSION' ) ) {
-    define( 'KITGENIX_DOCUMENT_MANAGER_VERSION', '2.1.0' );
+    define( 'KITGENIX_DOCUMENT_MANAGER_VERSION', '2.1.2' );
 }
 if ( ! defined( 'KITGENIX_DOCUMENT_MANAGER_FILE' ) ) {
     define( 'KITGENIX_DOCUMENT_MANAGER_FILE', __FILE__ );
